@@ -21,7 +21,7 @@ package org.cuckoo.ra.it;
 import org.cuckoo.ra.cci.CuckooConnection;
 import org.cuckoo.ra.cci.CuckooIndexedRecord;
 import org.cuckoo.ra.cci.CuckooMappedRecord;
-import org.cuckoo.ra.spi.CuckooSpiLocalTransaction;
+import org.cuckoo.ra.common.ConnectionMetaDataImpl;
 import org.cuckoo.ra.jco.CuckooDestinationDataProvider;
 import org.cuckoo.ra.spi.CuckooResourceAdapter;
 import org.cuckoo.ra.util.ForwardingList;
@@ -66,7 +66,7 @@ public class CuckooTest
 //        jar.addPackages(true, Package.getPackage("org.cuckoo.ra"));
         jar.addPackages( false, CuckooResourceAdapter.class.getPackage(), CuckooConnection.class.getPackage(),
                 ForwardingList.class.getPackage(), CuckooDestinationDataProvider.class.getPackage(),
-                CuckooSpiLocalTransaction.class.getPackage() );
+                ConnectionMetaDataImpl.class.getPackage() );
 
         ResourceAdapterArchive rar =
                 ShrinkWrap.create( ResourceAdapterArchive.class, deploymentName + ".rar" );
@@ -110,10 +110,10 @@ public class CuckooTest
         final IndexedRecord customerList = ( IndexedRecord ) result.get( "CUSTOMER_LIST" );
         assertEquals( 1, customerList.size() );
         final MappedRecord customerData = ( MappedRecord ) customerList.get( 0 );
-        assertFalse( newPhoneNo.equals( customerData.get( "PHONE" ) ));
+        assertFalse( newPhoneNo.equals( customerData.get( "PHONE" ) ) );
     }
 
-    
+
     @Test
     public void testTransactionalCallWithCMT() throws ResourceException
     {
@@ -139,7 +139,7 @@ public class CuckooTest
         assertEquals( newPhoneNo, customerData.get( "PHONE" ) );
     }
 
-   // @Test
+    // @Test
     public void testTransactionalCallWithLocalTransaction() throws ResourceException
     {
         // Changing phone number to new value...
@@ -164,7 +164,7 @@ public class CuckooTest
         assertEquals( newPhoneNo, customerData.get( "PHONE" ) );
     }
 
-    @SuppressWarnings( "unchecked")
+    @SuppressWarnings( "unchecked" )
     private MappedRecord createInputRecordForChangingCustomerPhoneNumber( String newPhoneNo )
     {
         final MappedRecord record = new CuckooMappedRecord( "BAPI_FLCUST_CHANGE" );
@@ -178,7 +178,7 @@ public class CuckooTest
         return record;
     }
 
-    @SuppressWarnings( "unchecked")
+    @SuppressWarnings( "unchecked" )
     private MappedRecord createInputRecordForGettingCustomerData()
     {
         final MappedRecord record = new CuckooMappedRecord( "BAPI_FLCUST_GETLIST" );
@@ -199,7 +199,7 @@ public class CuckooTest
         {
             CuckooMappedRecord returnStructure = ( CuckooMappedRecord ) line;
             final Object errorType = returnStructure.get( "TYPE" );
-            if ( "E".equals( errorType ) || "A".equals( errorType ))
+            if ( "E".equals( errorType ) || "A".equals( errorType ) )
             {
                 throw new AssertionError( "SAP returned Error of type " + errorType + " with message:" +
                         returnStructure.get( "MESSAGE" ) );
