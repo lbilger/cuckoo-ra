@@ -1,0 +1,252 @@
+/*
+ * Copyright (C) 2010 akquinet tech@spree GmbH
+ *
+ * This file is part of the Cuckoo Resource Adapter for SAP.
+ *
+ * Cuckoo Resource Adapter for SAP is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * Cuckoo Resource Adapter for SAP is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with Cuckoo Resource Adapter for SAP. If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.cuckoo.ra.jco;
+
+import com.sap.conn.jco.JCoAttributes;
+import com.sap.conn.jco.JCoContext;
+import com.sap.conn.jco.JCoCustomDestination;
+import com.sap.conn.jco.JCoDestination;
+import com.sap.conn.jco.JCoDestinationManager;
+import com.sap.conn.jco.JCoException;
+import com.sap.conn.jco.JCoFunction;
+import com.sap.conn.jco.JCoParameterList;
+import com.sap.conn.jco.JCoStructure;
+import org.cuckoo.ra.cci.CuckooMappedRecord;
+import org.cuckoo.ra.common.ApplicationProperties;
+import org.cuckoo.ra.common.ConnectionMetaDataImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.resource.ResourceException;
+import javax.resource.cci.MappedRecord;
+import javax.resource.cci.Record;
+import javax.resource.spi.LocalTransactionException;
+import java.util.HashMap;
+
+public class JCoAdapter
+{
+    private static final Logger LOG = LoggerFactory.getLogger( JCoAdapter.class );
+
+    private static final String OUTPUT_RECORD_NAME = "EXPORT";
+
+    /**
+     * @see com.sap.conn.jco.JCoAttributes#getPartnerType()
+     */
+    private static final HashMap<Character, String> PARTNER_TYPE_TO_PRODUCT_NAME_MAPPING = new HashMap<Character, String>()
+    {
+        {
+            put( '2', "SAP R/2" );
+            put( '3', "SAP R/3" );
+            put( 'E', "External Program" );
+            put( 'R', "Registered external program" );
+            put( 'F', "Shared memory pipe" );
+        }
+    };
+
+
+    private final JCoDestination destination;
+
+    private final JCoRecordMapper mapper = new JCoRecordMapper();
+
+    public JCoAdapter( String destinationName, ApplicationProperties applicationProperties ) throws ResourceException
+    {
+        LOG.debug( "JCoAdapter.JCoAdapter( " + destinationName + " )" );
+
+        if ( applicationProperties != null )
+        {
+            // use the application provided logon properties
+            destination = getDestination( destinationName ).createCustomDestination();
+            final JCoCustomDestination customDestination = ( JCoCustomDestination ) destination;
+            final JCoCustomDestination.UserData logonData = customDestination.getUserLogonData();
+            logonData.setAliasUser( applicationProperties.getAliasUser() );
+            logonData.setClient( applicationProperties.getClient() );
+            logonData.setLanguage( applicationProperties.getLanguage() );
+            logonData.setPassword( applicationProperties.getPassword() );
+            logonData.setSSOTicket( applicationProperties.getSsoTicket() );
+            logonData.setUser( applicationProperties.getUser() );
+            logonData.setX509Certificate( applicationProperties.getX509Certificate() );
+        }
+        else
+        {
+            // use the logon properties as configured for the resource adapter or managed connection factory
+            destination = getDestination( destinationName );
+        }
+    }
+
+    private JCoDestination getDestination( String destinationName ) throws ResourceException
+    {
+        LOG.debug( "JCoAdapter.getDestination( " + destinationName + " )" );
+        try
+        {
+            return JCoDestinationManager.getDestination( destinationName );
+        }
+        catch ( JCoException e )
+        {
+            throw new ResourceException( "Error getting Destination", e );
+        }
+    }
+
+    public void disconnect() throws ResourceException
+    {
+        LOG.debug( "JCoAdapter.disconnect()" );
+
+        // TODO TOTHINKABOUT: do we need this here?
+        if ( JCoContext.isStateful( destination ) )
+        {
+            LOG.warn( "JCo destination is still stateful. Ending stateful destination now..." );
+            try
+            {
+                JCoContext.end( destination );
+            }
+            catch ( JCoException e )
+            {
+                throw new ResourceException( "Error ending stateful JCo session" );
+            }
+        }
+    }
+
+    public MappedRecord executeFunction( String functionName, Record inputRecord ) throws ResourceException
+    {
+        LOG.debug( "JCoAdapter.executeFunction( " + functionName + ", " + inputRecord + " )" );
+
+        try
+        {
+            LOG.debug( "Getting JCo repository for destination: " + destination );
+            final JCoFunction function = destination.getRepository().getFunction( functionName );
+
+            final JCoParameterList importTableList = function.getTableParameterList();
+            final JCoParameterList importList = function.getImportParameterList();
+            mapper.populateImportRecord( importList, importTableList, ( MappedRecord ) inputRecord );
+
+            LOG.debug( "function before execute: " + function );
+
+            function.execute( destination );
+
+            LOG.debug( "function after execute: " + function );
+
+            mapper.checkForAbapExceptions( function );
+            final CuckooMappedRecord outputRecord = new CuckooMappedRecord( OUTPUT_RECORD_NAME );
+            mapper.convertExportParameters( function, outputRecord );
+            mapper.convertExportTable( function, outputRecord );
+
+            return outputRecord;
+        }
+        catch ( JCoException e )
+        {
+            throw new ResourceException( "Error executing JCo function", e );
+        }
+    }
+
+
+    public ConnectionMetaDataImpl createConnectionMetaData() throws ResourceException
+    {
+        try
+        {
+            final JCoAttributes attributes = destination.getAttributes();
+            String productName = determineProductName( attributes.getPartnerType() );
+            String eisProductVersion = "" + attributes.getPartnerReleaseNumber();
+            int maxConnections = destination.getPoolCapacity();
+            String userName = attributes.getUser();
+            return new ConnectionMetaDataImpl( productName, eisProductVersion, maxConnections, userName );
+        }
+        catch ( JCoException e )
+        {
+            throw new ResourceException( "Error getting connection meta data", e );
+        }
+    }
+
+    private String determineProductName( char partnerType )
+    {
+        String productName = PARTNER_TYPE_TO_PRODUCT_NAME_MAPPING.get( partnerType );
+        if ( productName == null )
+        {
+            productName = "Unknown (" + partnerType + ")";
+        }
+        return productName;
+    }
+
+    public void startTransaction()
+    {
+        LOG.trace( "JCoAdapter.startTransaction()" );
+
+        JCoContext.begin( destination );
+    }
+
+    public void commitTransaction() throws LocalTransactionException
+    {
+        LOG.debug( "Committing transaction in SAP" );
+        try
+        {
+            JCoFunction commitFunction = destination.getRepository().getFunction( "BAPI_TRANSACTION_COMMIT" );
+            commitFunction.getImportParameterList().setValue( "WAIT", "X" );
+            commitFunction.execute( destination );
+            assertNoErrorOccurredDuringCommit( commitFunction );
+            endStatefulSession();
+        }
+        catch ( JCoException e )
+        {
+            throw new LocalTransactionException( "Error committing transaction in SAP", e );
+        }
+    }
+
+    private void assertNoErrorOccurredDuringCommit( JCoFunction commitFunction )
+            throws LocalTransactionException
+    {
+        final JCoStructure returnStructure = commitFunction.getExportParameterList().getStructure( "RETURN" );
+        String returnType = returnStructure.getString( "TYPE" );
+        if ( "E".equals( returnType ) || "A".equals( returnType ) )
+        {
+            String returnMessage = returnStructure.getString( "MESSAGE" );
+            throw new LocalTransactionException(
+                    "Error committing transaction in SAP. Return type: " + returnType + ", return message: " +
+                            returnMessage );
+        }
+    }
+
+    public void rollbackTransaction() throws LocalTransactionException
+    {
+        LOG.debug( "Rolling back transaction in SAP" );
+        try
+        {
+            JCoFunction rollbackFunction = destination.getRepository().getFunction( "BAPI_TRANSACTION_ROLLBACK" );
+            rollbackFunction.execute( destination );
+            // No need to check the RETURN values here. From SAP documentation:
+            // "No messages are returned, if an error occurs. If the ROLLBACK WORK command is not successfully executed, 
+            // the system crashes." :-)
+            endStatefulSession();
+        }
+        catch ( JCoException e )
+        {
+            throw new LocalTransactionException( "Error committing transaction in SAP", e );
+        }
+    }
+
+    private void endStatefulSession()
+            throws LocalTransactionException
+    {
+        try
+        {
+            JCoContext.end( destination );
+        }
+        catch ( JCoException e )
+        {
+            throw new LocalTransactionException( "Error ending stateful JCo session after commit/rollback", e );
+        }
+    }
+}

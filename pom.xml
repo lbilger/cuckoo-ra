@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <properties>
+        <cuckoo-ra.version>0.1</cuckoo-ra.version>
+    </properties>
+
+    <groupId>org.cuckoo-ra</groupId>
+    <artifactId>cuckoo-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>${cuckoo-ra.version}</version>
+
+    <modules>
+        <module>cuckoo-rar</module>
+        <module>cuckoo-jar</module>
+    </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.cuckoo-ra</groupId>
+                <artifactId>cuckoo-jar</artifactId>
+                <version>${cuckoo-ra.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.cuckoo-ra</groupId>
+                <artifactId>cuckoo-rar</artifactId>
+                <type>rar</type>
+                <version>${cuckoo-ra.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.5.8</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>1.5.8</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.resource</groupId>
+                <artifactId>connector-api</artifactId>
+                <version>1.5</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.sap</groupId>
+                <artifactId>sap-jco</artifactId>
+                <version>3.0.5</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.8.1</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

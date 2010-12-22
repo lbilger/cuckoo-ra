@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.cuckoo-ra</groupId>
+        <artifactId>cuckoo-parent</artifactId>
+        <version>${cuckoo-ra.version}</version>
+    </parent>
+
+    <groupId>org.cuckoo-ra</groupId>
+    <artifactId>cuckoo-rar</artifactId>
+    <packaging>rar</packaging>
+    <version>${cuckoo-ra.version}</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.cuckoo-ra</groupId>
+            <artifactId>cuckoo-jar</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
