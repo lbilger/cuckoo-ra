@@ -46,7 +46,7 @@ public class CuckooResourceAdapter implements ResourceAdapter
 
     public CuckooResourceAdapter()
     {
-        LOG.debug( "CuckooResourceAdapter.CuckooResourceAdapter()" );
+        LOG.trace( "CuckooResourceAdapter.CuckooResourceAdapter()" );
         resourceAdapterMetaData = new CuckooRaMetaData();
         destinationDataProvider = new CuckooDestinationDataProvider();
         recordFactory = new CuckooRecordFactory();
@@ -62,7 +62,7 @@ public class CuckooResourceAdapter implements ResourceAdapter
     public void endpointActivation( MessageEndpointFactory endpointFactory,
                                     ActivationSpec spec ) throws ResourceException
     {
-        LOG.debug( "CuckooResourceAdapter.endpointActivation(MessageEndpointFactory, ActivationSpec)" );
+        LOG.trace( "CuckooResourceAdapter.endpointActivation(MessageEndpointFactory, ActivationSpec)" );
         throw new NotSupportedException( "Inbound calls are not yet implemented" );
     }
 
@@ -75,7 +75,7 @@ public class CuckooResourceAdapter implements ResourceAdapter
     public void endpointDeactivation( MessageEndpointFactory endpointFactory,
                                       ActivationSpec spec )
     {
-        LOG.debug( "CuckooResourceAdapter.endpointDeactivation(MessageEndpointFactory, ActivationSpec)" );
+        LOG.trace( "CuckooResourceAdapter.endpointDeactivation(MessageEndpointFactory, ActivationSpec)" );
     }
 
     /**
@@ -88,7 +88,7 @@ public class CuckooResourceAdapter implements ResourceAdapter
     public void start( BootstrapContext ctx )
             throws ResourceAdapterInternalException
     {
-        LOG.debug( "CuckooResourceAdapter.start(" + ctx + ")" );
+        LOG.trace( "CuckooResourceAdapter.start(" + ctx + ")" );
         Environment.registerDestinationDataProvider( destinationDataProvider );
     }
 
@@ -98,7 +98,7 @@ public class CuckooResourceAdapter implements ResourceAdapter
      */
     public void stop()
     {
-        LOG.debug( "CuckooResourceAdapter.stop()" );
+        LOG.trace( "CuckooResourceAdapter.stop()" );
         Environment.unregisterDestinationDataProvider( destinationDataProvider );
     }
 
@@ -112,7 +112,7 @@ public class CuckooResourceAdapter implements ResourceAdapter
     public XAResource[] getXAResources( ActivationSpec[] specs )
             throws ResourceException
     {
-        LOG.debug( "CuckooResourceAdapter.getXAResources(ActivationSpec[])" );
+        LOG.trace( "CuckooResourceAdapter.getXAResources(ActivationSpec[])" );
         throw new NotSupportedException( "XA-Resources are not supported" );
     }
 
@@ -133,14 +133,14 @@ public class CuckooResourceAdapter implements ResourceAdapter
 
     public CuckooRaMetaData getResourceAdapterMetaData()
     {
-        LOG.debug( "CuckooResourceAdapter.getResourceAdapterMetaData()" );
+        LOG.trace( "CuckooResourceAdapter.getResourceAdapterMetaData()" );
 
         return resourceAdapterMetaData;
     }
 
     public CuckooRecordFactory getRecordFactory()
     {
-        LOG.debug( "CuckooResourceAdapter.getRecordFactory()" );
+        LOG.trace( "CuckooResourceAdapter.getRecordFactory()" );
 
         return recordFactory;
     }

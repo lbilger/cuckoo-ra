@@ -36,7 +36,8 @@ public class JCoDestinationUtil
 
     public static Properties createJCoDestinationProperties(ConfigurationProperties config)
     {
-        LOG.debug("ConfigurationPropertiesImpl.createJCoDestinationProperties()");
+        LOG.trace("ConfigurationPropertiesImpl.createJCoDestinationProperties()");
+
         final Properties properties = new Properties();
         addPropertyNullSafe(properties, DestinationDataProvider.JCO_CLIENT, config.getJcoClient());
         addPropertyNullSafe(properties, DestinationDataProvider.JCO_USER, config.getJcoUser());

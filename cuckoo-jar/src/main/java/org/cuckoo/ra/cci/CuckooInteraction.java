@@ -38,7 +38,7 @@ public class CuckooInteraction implements Interaction
 
     private boolean closed = false;
 
-    public CuckooInteraction( CuckooConnection cuckooCciConnection )
+    CuckooInteraction( CuckooConnection cuckooCciConnection )
     {
         LOG.trace( "CuckooInteraction.CuckooInteraction(CuckooConnection)" );
         connection = cuckooCciConnection;

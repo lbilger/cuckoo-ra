@@ -28,7 +28,7 @@ public class ConfigurationPropertiesHolder implements ConfigurationProperties
     private final ConfigurationPropertiesImpl properties = new ConfigurationPropertiesImpl();
 
 
-    public ConfigurationPropertiesImpl getConfigurationProperties()
+    ConfigurationPropertiesImpl getConfigurationProperties()
     {
         return new ConfigurationPropertiesImpl(properties);
     }

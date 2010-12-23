@@ -66,9 +66,14 @@ public class JCoAdapter
 
     public JCoAdapter( String destinationName, ApplicationProperties applicationProperties ) throws ResourceException
     {
-        LOG.debug( "JCoAdapter.JCoAdapter( " + destinationName + " )" );
+        LOG.trace( "JCoAdapter.JCoAdapter( " + destinationName + " )" );
 
-        if ( applicationProperties != null )
+        if ( applicationProperties == null )
+        {
+            // use the logon properties as configured for the resource adapter or managed connection factory
+            destination = getDestination( destinationName );
+        }
+        else
         {
             // use the application provided logon properties
             destination = getDestination( destinationName ).createCustomDestination();
@@ -82,16 +87,11 @@ public class JCoAdapter
             logonData.setUser( applicationProperties.getUser() );
             logonData.setX509Certificate( applicationProperties.getX509Certificate() );
         }
-        else
-        {
-            // use the logon properties as configured for the resource adapter or managed connection factory
-            destination = getDestination( destinationName );
-        }
     }
 
     private JCoDestination getDestination( String destinationName ) throws ResourceException
     {
-        LOG.debug( "JCoAdapter.getDestination( " + destinationName + " )" );
+        LOG.trace( "JCoAdapter.getDestination( " + destinationName + " )" );
         try
         {
             return JCoDestinationManager.getDestination( destinationName );
@@ -104,9 +104,9 @@ public class JCoAdapter
 
     public void disconnect() throws ResourceException
     {
-        LOG.debug( "JCoAdapter.disconnect()" );
+        LOG.trace( "JCoAdapter.disconnect()" );
 
-        // TODO TOTHINKABOUT: do we need this here?
+        // TODO: do we need this?
         if ( JCoContext.isStateful( destination ) )
         {
             LOG.warn( "JCo destination is still stateful. Ending stateful destination now..." );
@@ -123,22 +123,22 @@ public class JCoAdapter
 
     public MappedRecord executeFunction( String functionName, Record inputRecord ) throws ResourceException
     {
-        LOG.debug( "JCoAdapter.executeFunction( " + functionName + ", " + inputRecord + " )" );
+        LOG.trace( "JCoAdapter.executeFunction( " + functionName + ", " + inputRecord + " )" );
 
         try
         {
-            LOG.debug( "Getting JCo repository for destination: " + destination );
+            LOG.trace( "Getting JCo repository for destination: " + destination );
             final JCoFunction function = destination.getRepository().getFunction( functionName );
 
             final JCoParameterList importTableList = function.getTableParameterList();
             final JCoParameterList importList = function.getImportParameterList();
             mapper.populateImportRecord( importList, importTableList, ( MappedRecord ) inputRecord );
 
-            LOG.debug( "function before execute: " + function );
+            LOG.trace( "function before execute: " + function );
 
             function.execute( destination );
 
-            LOG.debug( "function after execute: " + function );
+            LOG.trace( "function after execute: " + function );
 
             mapper.checkForAbapExceptions( function );
             final CuckooMappedRecord outputRecord = new CuckooMappedRecord( OUTPUT_RECORD_NAME );
@@ -156,6 +156,8 @@ public class JCoAdapter
 
     public ConnectionMetaDataImpl createConnectionMetaData() throws ResourceException
     {
+        LOG.trace( "JCoAdapter.createConnectionMetaData()" );
+
         try
         {
             final JCoAttributes attributes = destination.getAttributes();
@@ -183,14 +185,14 @@ public class JCoAdapter
 
     public void startTransaction()
     {
-        LOG.trace( "JCoAdapter.startTransaction()" );
+        LOG.debug( "Starting stateful SAP session for destination " + destination.getDestinationName() );
 
         JCoContext.begin( destination );
     }
 
     public void commitTransaction() throws LocalTransactionException
     {
-        LOG.debug( "Committing transaction in SAP" );
+        LOG.debug( "Committing transaction in SAP on destination " + destination.getDestinationName() );
         try
         {
             JCoFunction commitFunction = destination.getRepository().getFunction( "BAPI_TRANSACTION_COMMIT" );
@@ -221,7 +223,7 @@ public class JCoAdapter
 
     public void rollbackTransaction() throws LocalTransactionException
     {
-        LOG.debug( "Rolling back transaction in SAP" );
+        LOG.debug( "Rolling back transaction in SAP on destination " + destination.getDestinationName() );
         try
         {
             JCoFunction rollbackFunction = destination.getRepository().getFunction( "BAPI_TRANSACTION_ROLLBACK" );
@@ -240,6 +242,7 @@ public class JCoAdapter
     private void endStatefulSession()
             throws LocalTransactionException
     {
+        LOG.debug( "Ending stateful SAP session for destination " + destination.getDestinationName() );
         try
         {
             JCoContext.end( destination );

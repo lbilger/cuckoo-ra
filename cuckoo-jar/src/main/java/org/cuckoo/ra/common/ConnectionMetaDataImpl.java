@@ -18,9 +18,6 @@
  */
 package org.cuckoo.ra.common;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.resource.ResourceException;
 import javax.resource.cci.ConnectionMetaData;
 import javax.resource.spi.ManagedConnectionMetaData;
@@ -28,8 +25,6 @@ import javax.resource.spi.ManagedConnectionMetaData;
 
 public class ConnectionMetaDataImpl implements ManagedConnectionMetaData, ConnectionMetaData
 {
-    private static final Logger LOG = LoggerFactory.getLogger( ConnectionMetaDataImpl.class );
-
     private final String eisProductName;
     private final String eisProductVersion;
     private final int maxConnections;
@@ -43,8 +38,6 @@ public class ConnectionMetaDataImpl implements ManagedConnectionMetaData, Connec
         this.eisProductVersion = eisProductVersion;
         this.maxConnections = maxConnections;
         this.userName = userName;
-
-        LOG.trace( "ConnectionMetaDataImpl.ConnectionMetaDataImpl( )" );
     }
 
     /**

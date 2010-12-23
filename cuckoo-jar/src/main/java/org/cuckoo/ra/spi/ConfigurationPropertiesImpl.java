@@ -18,14 +18,9 @@
  */
 package org.cuckoo.ra.spi;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @SuppressWarnings( "unused" )
 public class ConfigurationPropertiesImpl implements ConfigurationProperties
 {
-    private static final Logger LOG = LoggerFactory.getLogger( ConfigurationPropertiesImpl.class );
-
     private String destinationName;
     private String jcoClient;
     private String jcoUser;
@@ -65,8 +60,6 @@ public class ConfigurationPropertiesImpl implements ConfigurationProperties
      */
     ConfigurationPropertiesImpl( ConfigurationProperties properties )
     {
-        LOG.debug( "ConfigurationPropertiesImpl.ConfigurationPropertiesImpl( ConfigurationPropertiesImpl )" );
-
         destinationName = properties.getDestinationName();
         jcoAliasUser = properties.getJcoAliasUser();
         jcoApplicationServerHost = properties.getJcoApplicationServerHost();
@@ -102,7 +95,7 @@ public class ConfigurationPropertiesImpl implements ConfigurationProperties
 
     ConfigurationPropertiesImpl()
     {
-        LOG.debug( "ConfigurationPropertiesImpl.ConfigurationPropertiesImpl()" );
+        // nothing to do
     }
 
     public String getDestinationName()

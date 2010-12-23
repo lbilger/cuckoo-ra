@@ -55,7 +55,7 @@ public class CuckooDestinationDataProvider implements DestinationDataProvider
         eventListener.updated( destinationName );
     }
 
-    // TODO must be called on undeployment of ManagedConnectionFactory
+    // TODO shall be called on undeployment of ManagedConnectionFactory: how do we get informed about this?
     public void removeDestination( String destinationName )
     {
         LOG.debug( "CuckooDestinationDataProvider.removeDestination( " + destinationName + " )" );

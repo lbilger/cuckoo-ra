@@ -45,29 +45,17 @@ import java.util.Set;
 public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolder
         implements ManagedConnectionFactory, ResourceAdapterAssociation
 {
-    /**
-     * The logger
-     */
     private static final Logger LOG = LoggerFactory.getLogger( CuckooManagedConnectionFactory.class );
 
-    /**
-     * The resource adapter
-     */
     private CuckooResourceAdapter resourceAdapter;
 
-    /**
-     * The logwriter
-     */
     private PrintWriter logwriter;
 
     private boolean initialized = false;
 
-    /**
-     * default constructor
-     */
     public CuckooManagedConnectionFactory()
     {
-        LOG.debug( "CuckooManagedConnectionFactory()" );
+        LOG.trace( "CuckooManagedConnectionFactory()" );
     }
 
     /**
@@ -80,7 +68,7 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
     public CuckooConnectionFactory createConnectionFactory( ConnectionManager connectionManager )
             throws ResourceException
     {
-        LOG.debug( "CuckooManagedConnectionFactory.createConnectionFactory(ConnectionManager)" );
+        LOG.trace( "CuckooManagedConnectionFactory.createConnectionFactory(ConnectionManager)" );
 
         if ( !initialized )
         {
@@ -109,7 +97,7 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
      */
     public CuckooConnectionFactory createConnectionFactory() throws ResourceException
     {
-        LOG.debug( "CuckooManagedConnectionFactory.createConnectionFactory()" );
+        LOG.trace( "CuckooManagedConnectionFactory.createConnectionFactory()" );
 
         return createConnectionFactory( new CuckooConnectionManager() );
     }
@@ -126,7 +114,7 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
                                                       ConnectionRequestInfo connectionRequestInfo )
             throws ResourceException
     {
-        LOG.debug(
+        LOG.trace(
                 "CuckooManagedConnectionFactory.createManagedConnection(Subject, ConnectionRequestInfo)" );
 
         assertInitialized();
@@ -198,7 +186,7 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
                                                       ConnectionRequestInfo cxRequestInfo )
             throws ResourceException
     {
-        LOG.debug(
+        LOG.trace(
                 "CuckooManagedConnectionFactory.matchManagedConnections(Set, Subject, ConnectionRequestInfo)" );
 
         assertInitialized();
@@ -245,7 +233,7 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
      */
     public PrintWriter getLogWriter() throws ResourceException
     {
-        LOG.debug( "CuckooManagedConnectionFactory.getLogWriter()" );
+        LOG.trace( "CuckooManagedConnectionFactory.getLogWriter()" );
         return logwriter;
     }
 
@@ -257,7 +245,7 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
      */
     public void setLogWriter( PrintWriter out ) throws ResourceException
     {
-        LOG.debug( "CuckooManagedConnectionFactory.setLogWriter(PrintWriter)" );
+        LOG.trace( "CuckooManagedConnectionFactory.setLogWriter(PrintWriter)" );
         logwriter = out;
     }
 
@@ -268,7 +256,7 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
      */
     public CuckooResourceAdapter getResourceAdapter()
     {
-        LOG.debug( "CuckooManagedConnectionFactory.getResourceAdapter()" );
+        LOG.trace( "CuckooManagedConnectionFactory.getResourceAdapter()" );
         return resourceAdapter;
     }
 
@@ -279,7 +267,7 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
      */
     public void setResourceAdapter( ResourceAdapter ra ) throws ResourceException
     {
-        LOG.debug( "CuckooManagedConnectionFactory.setResourceAdapter(ResourceAdapter)" );
+        LOG.trace( "CuckooManagedConnectionFactory.setResourceAdapter(ResourceAdapter)" );
 
         if ( !( ra instanceof CuckooResourceAdapter ) )
         {

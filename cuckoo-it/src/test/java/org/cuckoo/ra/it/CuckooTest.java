@@ -48,28 +48,25 @@ import static org.junit.Assert.assertFalse;
 @RunWith( Arquillian.class )
 public class CuckooTest
 {
-    private static final Logger log = LoggerFactory.getLogger( CuckooTest.class.getName() );
+    private static final Logger LOG = LoggerFactory.getLogger( CuckooTest.class.getName() );
 
-    private static final String deploymentName = "CuckooTestRA";
+    private static final String DEPLOYMENT_NAME = "CuckooTestRA";
+
+    private static final String CUSTOMER_NUMBER = "00000001";
 
     @EJB
     private TestEjb ejb;
-    private static final String CUSTOMER_NUMBER = "00000001";
 
     @Deployment
     public static EnterpriseArchive createDeployment()
     {
-        log.info( "Erzeuge Archiv..." );
-
-        JavaArchive jar = ShrinkWrap.create( JavaArchive.class,
-                deploymentName + ".jar" );
-//        jar.addPackages(true, Package.getPackage("org.cuckoo.ra"));
+        JavaArchive jar = ShrinkWrap.create( JavaArchive.class, DEPLOYMENT_NAME + ".jar" );
         jar.addPackages( false, CuckooResourceAdapter.class.getPackage(), CuckooConnection.class.getPackage(),
                 ForwardingList.class.getPackage(), CuckooDestinationDataProvider.class.getPackage(),
                 ConnectionMetaDataImpl.class.getPackage() );
 
         ResourceAdapterArchive rar =
-                ShrinkWrap.create( ResourceAdapterArchive.class, deploymentName + ".rar" );
+                ShrinkWrap.create( ResourceAdapterArchive.class, DEPLOYMENT_NAME + ".rar" );
         rar.addLibrary( jar );
         rar.addManifestResource( CuckooTest.class.getResource( "/META-INF/ra.xml" ), "ra.xml" );
 
@@ -88,23 +85,21 @@ public class CuckooTest
         return ear;
     }
 
-    //@Test
+    @Test
     public void testTransactionalCallWithoutTransaction() throws ResourceException
     {
         // Changing phone number to new value...
         final String newPhoneNo = "" + new Date().getTime();
-        log.info( "testTransactionalCallWithCMT(): changing phone number to: " + newPhoneNo );
+        LOG.info( "testTransactionalCallWithCMT(): changing phone number to: " + newPhoneNo );
         MappedRecord record = createInputRecordForChangingCustomerPhoneNumber( newPhoneNo );
         MappedRecord result = ejb.callFunctionWithoutTransaction( record );
 
-        log.info( "Result: " + result );
         assertNoSapError( result );
 
-        // Test: Phone number should not be changed
+        // Test: Phone number should not be changed in SAP
         record = createInputRecordForGettingCustomerData();
         result = ejb.callFunctionWithoutTransaction( record );
 
-        log.info( "Result getting Customer data: " + result );
         assertNoSapError( result );
 
         final IndexedRecord customerList = ( IndexedRecord ) result.get( "CUSTOMER_LIST" );
@@ -119,18 +114,16 @@ public class CuckooTest
     {
         // Changing phone number to new value...
         final String newPhoneNo = "" + new Date().getTime();
-        log.info( "testTransactionalCallWithCMT(): changing phone number to: " + newPhoneNo );
+        LOG.info( "testTransactionalCallWithCMT(): changing phone number to: " + newPhoneNo );
         MappedRecord record = createInputRecordForChangingCustomerPhoneNumber( newPhoneNo );
         MappedRecord result = ejb.callFunctionWithContainerManagedTransaction( record );
 
-        log.info( "Result: " + result );
         assertNoSapError( result );
 
         // Test: was it really changes and committed?
         record = createInputRecordForGettingCustomerData();
         result = ejb.callFunctionWithoutTransaction( record );
 
-        log.info( "Result getting Customer data: " + result );
         assertNoSapError( result );
 
         final IndexedRecord customerList = ( IndexedRecord ) result.get( "CUSTOMER_LIST" );
@@ -139,23 +132,21 @@ public class CuckooTest
         assertEquals( newPhoneNo, customerData.get( "PHONE" ) );
     }
 
-    // @Test
+    @Test
     public void testTransactionalCallWithLocalTransaction() throws ResourceException
     {
         // Changing phone number to new value...
         final String newPhoneNo = "" + new Date().getTime();
-        log.info( "testTransactionalCallWithCMT(): changing phone number to: " + newPhoneNo );
+        LOG.info( "testTransactionalCallWithCMT(): changing phone number to: " + newPhoneNo );
         MappedRecord record = createInputRecordForChangingCustomerPhoneNumber( newPhoneNo );
         MappedRecord result = ejb.callFunctionWithLocalTransaction( record );
 
-        log.info( "Result: " + result );
         assertNoSapError( result );
 
         // Test: was it really changes and committed?
         record = createInputRecordForGettingCustomerData();
         result = ejb.callFunctionWithoutTransaction( record );
 
-        log.info( "Result getting Customer data: " + result );
         assertNoSapError( result );
 
         final IndexedRecord customerList = ( IndexedRecord ) result.get( "CUSTOMER_LIST" );

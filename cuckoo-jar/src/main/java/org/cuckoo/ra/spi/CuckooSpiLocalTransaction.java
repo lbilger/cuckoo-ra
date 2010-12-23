@@ -37,19 +37,19 @@ public class CuckooSpiLocalTransaction implements javax.resource.spi.LocalTransa
 
     public void begin()
     {
-        LOG.debug( "Start transaction" );
+        LOG.trace( "Start transaction" );
         managedConnection.startTransaction();
     }
 
     public void commit() throws ResourceException
     {
-        LOG.debug( "Commit transaction" );
+        LOG.trace( "Commit transaction" );
         managedConnection.commitTransaction();
     }
 
     public void rollback() throws ResourceException
     {
-        LOG.debug( "Rollback transaction" );
+        LOG.trace( "Rollback transaction" );
         managedConnection.rollbackTransaction();
     }
 }

@@ -23,9 +23,10 @@ import javax.resource.spi.ConnectionManager;
 import javax.resource.spi.ConnectionRequestInfo;
 import javax.resource.spi.ManagedConnectionFactory;
 
+// TODO
 public class CuckooConnectionManager implements ConnectionManager
 {
-   public CuckooConnectionManager()
+   CuckooConnectionManager()
    {
        throw new UnsupportedOperationException("Support for non-managed environments not yet implemented");
    }

@@ -34,7 +34,7 @@ public class CuckooCciLocalTransaction implements javax.resource.cci.LocalTransa
     private final CuckooManagedConnection managedConnection;
 
 
-    public CuckooCciLocalTransaction( CuckooManagedConnection managedConnection, Connection connectionHandle )
+    CuckooCciLocalTransaction( CuckooManagedConnection managedConnection, Connection connectionHandle )
     {
         this.managedConnection = managedConnection;
         this.connectionHandle = connectionHandle;

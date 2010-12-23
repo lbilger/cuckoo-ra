@@ -58,7 +58,7 @@ public class CuckooManagedConnection implements ManagedConnection
     CuckooManagedConnection( ConfigurationProperties configurationProperties,
                              ApplicationProperties applicationProperties ) throws ResourceException
     {
-        LOG.debug( "CuckooManagedConnection.CuckooManagedConnection()" );
+        LOG.trace( "CuckooManagedConnection.CuckooManagedConnection()" );
 
         this.configurationProperties = configurationProperties;
         this.applicationProperties = applicationProperties;
@@ -71,7 +71,7 @@ public class CuckooManagedConnection implements ManagedConnection
 
     ApplicationProperties getApplicationProperties()
     {
-        LOG.debug( "CuckooManagedConnection.getApplicationProperties()" );
+        LOG.trace( "CuckooManagedConnection.getApplicationProperties()" );
 
         return applicationProperties;
     }
@@ -88,9 +88,9 @@ public class CuckooManagedConnection implements ManagedConnection
     public CuckooConnection getConnection( Subject subject,
                                               ConnectionRequestInfo connectionRequestInfo ) throws ResourceException
     {
-        LOG.debug( "CuckooManagedConnection.getConnection( Subject, ConnectionRequestInfo )" );
+        LOG.trace( "CuckooManagedConnection.getConnection( Subject, ConnectionRequestInfo )" );
 
-        // TODO check subject and connectionRequestInfo are the same as in ManagedConnection
+        // TODO assert that subject and connectionRequestInfo are the same as in ManagedConnection
 
         CuckooConnection connection = new CuckooConnection( this );
         connectionHandlers.add( connection );
@@ -106,7 +106,7 @@ public class CuckooManagedConnection implements ManagedConnection
      */
     public void associateConnection( Object connection ) throws ResourceException
     {
-        LOG.debug( "CuckooManagedConnection.associateConnection(" + connection + ")" );
+        LOG.trace( "CuckooManagedConnection.associateConnection(" + connection + ")" );
 
         if ( connection == null )
         {
@@ -127,7 +127,7 @@ public class CuckooManagedConnection implements ManagedConnection
 
     public void disassociateConnection( final CuckooConnection connection ) throws ResourceException
     {
-        LOG.debug( "CuckooManagedConnection.disassociateConnection( " + connection + " )" );
+        LOG.trace( "CuckooManagedConnection.disassociateConnection( " + connection + " )" );
 
         if ( !connectionHandlers.contains( connection ) )
         {
@@ -145,7 +145,7 @@ public class CuckooManagedConnection implements ManagedConnection
     public void cleanup() throws ResourceException
 
     {
-        LOG.debug( "CuckooManagedConnection.cleanup()" );
+        LOG.trace( "CuckooManagedConnection.cleanup()" );
         synchronized ( connectionHandlers )
         {
             for ( final CuckooConnection connectionImpl : connectionHandlers )
@@ -163,7 +163,7 @@ public class CuckooManagedConnection implements ManagedConnection
      */
     public void destroy() throws ResourceException
     {
-        LOG.debug( "CuckooManagedConnection.destroy()" );
+        LOG.trace( "CuckooManagedConnection.destroy()" );
         synchronized ( connectionHandlers )
         {
             connectionHandlers.clear();
@@ -178,7 +178,7 @@ public class CuckooManagedConnection implements ManagedConnection
      */
     public void addConnectionEventListener( ConnectionEventListener listener )
     {
-        LOG.debug( "CuckooManagedConnection.addConnectionEventListener(ConnectionEventListener)" );
+        LOG.trace( "CuckooManagedConnection.addConnectionEventListener(ConnectionEventListener)" );
         synchronized ( eventListeners )
         {
             if ( !eventListeners.contains( listener ) )
@@ -195,7 +195,7 @@ public class CuckooManagedConnection implements ManagedConnection
      */
     public void removeConnectionEventListener( ConnectionEventListener listener )
     {
-        LOG.debug( "CuckooManagedConnection.removeConnectionEventListener(ConnectionEventListener)" );
+        LOG.trace( "CuckooManagedConnection.removeConnectionEventListener(ConnectionEventListener)" );
         synchronized ( eventListeners )
         {
             eventListeners.remove( listener );
@@ -210,7 +210,7 @@ public class CuckooManagedConnection implements ManagedConnection
      */
     public PrintWriter getLogWriter() throws ResourceException
     {
-        LOG.debug( "CuckooManagedConnection.getLogWriter()" );
+        LOG.trace( "CuckooManagedConnection.getLogWriter()" );
         return null;
     }
 
@@ -222,7 +222,7 @@ public class CuckooManagedConnection implements ManagedConnection
      */
     public void setLogWriter( PrintWriter out ) throws ResourceException
     {
-        LOG.debug( "CuckooManagedConnection.setLogWriter(PrintWriter)" );
+        LOG.trace( "CuckooManagedConnection.setLogWriter(PrintWriter)" );
     }
 
     /**
@@ -232,7 +232,7 @@ public class CuckooManagedConnection implements ManagedConnection
      */
     public CuckooSpiLocalTransaction getLocalTransaction() 
     {
-        LOG.debug( "CuckooManagedConnection.getLocalTransaction()" );
+        LOG.trace( "CuckooManagedConnection.getLocalTransaction()" );
         return localTransaction;
     }
 
@@ -244,7 +244,7 @@ public class CuckooManagedConnection implements ManagedConnection
      */
     public XAResource getXAResource() throws ResourceException
     {
-        LOG.debug( "CuckooManagedConnection.getXAResource()" );
+        LOG.trace( "CuckooManagedConnection.getXAResource()" );
         throw new NotSupportedException( "XA is not supported, since SAP does not implement 2-phase-commit" );
     }
 
@@ -256,7 +256,7 @@ public class CuckooManagedConnection implements ManagedConnection
      */
     public ConnectionMetaDataImpl getMetaData() throws ResourceException
     {
-        LOG.debug( "CuckooManagedConnection.getMetaData()" );
+        LOG.trace( "CuckooManagedConnection.getMetaData()" );
         return metaData;
     }
 
@@ -299,7 +299,7 @@ public class CuckooManagedConnection implements ManagedConnection
 
     public void notifyConnectionClosed( CuckooConnection connection )
     {
-        LOG.debug( "CuckooManagedConnection.notifyConnectionClosed()" );
+        LOG.trace( "CuckooManagedConnection.notifyConnectionClosed()" );
 
         final ConnectionEvent event = new ConnectionEvent( this, ConnectionEvent.CONNECTION_CLOSED );
         event.setConnectionHandle( connection );
@@ -315,34 +315,36 @@ public class CuckooManagedConnection implements ManagedConnection
 
     public MappedRecord executeFunction( String functionName, Record input ) throws ResourceException
     {
-        LOG.debug( "CuckooManagedConnection.executeFunction()" );
+        LOG.trace( "CuckooManagedConnection.executeFunction()" );
 
         return jCoAdapter.executeFunction( functionName, input );
     }
 
-    public void startTransaction()
+    void startTransaction()
     {
-        LOG.debug( "CuckooManagedConnection.startTransaction()" );
+        LOG.trace( "CuckooManagedConnection.startTransaction()" );
 
         jCoAdapter.startTransaction();
     }
 
-    public void commitTransaction() throws ResourceException
+    void commitTransaction() throws ResourceException
     {
-        LOG.debug( "CuckooManagedConnection.commitTransaction()" );
+        LOG.trace( "CuckooManagedConnection.commitTransaction()" );
 
         jCoAdapter.commitTransaction();
     }
 
-    public void rollbackTransaction() throws ResourceException
+    void rollbackTransaction() throws ResourceException
     {
-        LOG.debug( "CuckooManagedConnection.rollbackTransaction()" );
+        LOG.trace( "CuckooManagedConnection.rollbackTransaction()" );
 
         jCoAdapter.rollbackTransaction();
     }
 
     public void notifyLocalTransactionStartedEvent( Connection connectionHandle )
     {
+        LOG.trace( "CuckooManagedConnection.notifyLocalTransactionStartedEvent()" );
+
         final ConnectionEvent event = new ConnectionEvent( this, ConnectionEvent.LOCAL_TRANSACTION_STARTED );
         event.setConnectionHandle( connectionHandle );
 
@@ -358,6 +360,8 @@ public class CuckooManagedConnection implements ManagedConnection
 
     public void notifyLocalTransactionCommittedEvent( Connection connectionHandle )
     {
+        LOG.trace( "CuckooManagedConnection.notifyLocalTransactionCommittedEvent()" );
+
         final ConnectionEvent event = new ConnectionEvent( this, ConnectionEvent.LOCAL_TRANSACTION_COMMITTED );
         event.setConnectionHandle( connectionHandle );
 
@@ -372,6 +376,8 @@ public class CuckooManagedConnection implements ManagedConnection
 
     public void notifyLocalTransactionRolledbackEvent( Connection connectionHandle )
     {
+        LOG.trace( "CuckooManagedConnection.notifyLocalTransactionRolledbackEvent()" );
+
         final ConnectionEvent event = new ConnectionEvent( this, ConnectionEvent.LOCAL_TRANSACTION_ROLLEDBACK );
         event.setConnectionHandle( connectionHandle );
 
@@ -382,6 +388,5 @@ public class CuckooManagedConnection implements ManagedConnection
                 eventListener.localTransactionRolledback( event );
             }
         }
-
     }
 }
