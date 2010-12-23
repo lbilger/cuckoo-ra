@@ -44,6 +44,7 @@ import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 @RunWith( Arquillian.class )
 public class CuckooTest
@@ -86,7 +87,7 @@ public class CuckooTest
     }
 
     @Test
-    public void testTransactionalCallWithoutTransaction() throws ResourceException
+    public void testCallWithoutTransaction() throws ResourceException
     {
         // Changing phone number to new value...
         final String newPhoneNo = "" + new Date().getTime();
@@ -130,6 +131,35 @@ public class CuckooTest
         assertEquals( 1, customerList.size() );
         final MappedRecord customerData = ( MappedRecord ) customerList.get( 0 );
         assertEquals( newPhoneNo, customerData.get( "PHONE" ) );
+    }
+
+    @Test
+    public void testTransactionalCallWithCMTAndRollback() throws ResourceException
+    {
+        // Changing phone number to new value...
+        final String newPhoneNo = "" + new Date().getTime();
+        LOG.info( "testTransactionalCallWithCMT(): changing phone number to: " + newPhoneNo );
+        MappedRecord record = createInputRecordForChangingCustomerPhoneNumber( newPhoneNo );
+        try
+        {
+            ejb.callFunctionWithContainerManagedTransactionAndThrowRuntimeException( record );
+            fail();
+        }
+        catch ( RuntimeException e )
+        {
+            e.printStackTrace();
+            // expected
+        }
+        // Test: changes should have been rolled back in SAP
+        record = createInputRecordForGettingCustomerData();
+        MappedRecord result = ejb.callFunctionWithoutTransaction( record );
+
+        assertNoSapError( result );
+
+        final IndexedRecord customerList = ( IndexedRecord ) result.get( "CUSTOMER_LIST" );
+        assertEquals( 1, customerList.size() );
+        final MappedRecord customerData = ( MappedRecord ) customerList.get( 0 );
+        assertFalse( newPhoneNo.equals( customerData.get( "PHONE" ) ) );
     }
 
     @Test

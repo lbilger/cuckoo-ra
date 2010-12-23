@@ -101,6 +101,30 @@ public class TestEjbBean implements TestEjb
         }
     }
 
+    public MappedRecord callFunctionWithContainerManagedTransactionAndThrowRuntimeException( MappedRecord input )
+            throws ResourceException
+    {
+        Connection connection = null;
+        try
+        {
+            connection = cf.getConnection();
+            callSapFunction( connection, input );
+            throw new RuntimeException(
+                    "Some error happened after calling SAP function, changes shall automatically be rolled back in SAP" );
+        }
+        catch ( ResourceException e )
+        {
+            throw new RuntimeException( "Error getting Connection", e );
+        }
+        finally
+        {
+            if ( connection != null )
+            {
+                connection.close();
+            }
+        }
+    }
+
     private MappedRecord callSapFunction( Connection connection, MappedRecord input )
     {
         try

@@ -31,4 +31,7 @@ public interface TestEjb
     MappedRecord callFunctionWithLocalTransaction( MappedRecord input ) throws ResourceException;
 
     MappedRecord callFunctionWithContainerManagedTransaction( MappedRecord input ) throws ResourceException;
+
+    MappedRecord callFunctionWithContainerManagedTransactionAndThrowRuntimeException( MappedRecord record )
+            throws ResourceException;
 }
