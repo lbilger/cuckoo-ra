@@ -191,9 +191,10 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
 
         assertInitialized();
 
-        if ( !( cxRequestInfo instanceof ApplicationProperties ) )
+        if ( cxRequestInfo != null && !( cxRequestInfo instanceof ApplicationProperties ) )
         {
-            LOG.warn( "ConnectionRequestInfo is not an instance of ApplicationProperties" );
+            LOG.warn( "ConnectionRequestInfo is not an instance of ApplicationProperties, but of " +
+                    cxRequestInfo.getClass() );
             return null;
         }
 

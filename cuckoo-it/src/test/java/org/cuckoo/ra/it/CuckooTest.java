@@ -90,7 +90,7 @@ public class CuckooTest
     {
         // Changing phone number to new value...
         final String newPhoneNo = "" + new Date().getTime();
-        LOG.info( "testTransactionalCallWithCMT(): changing phone number to: " + newPhoneNo );
+        LOG.info( "testTransactionalCallWithoutTransaction(): changing phone number to: " + newPhoneNo );
         MappedRecord record = createInputRecordForChangingCustomerPhoneNumber( newPhoneNo );
         MappedRecord result = ejb.callFunctionWithoutTransaction( record );
 
@@ -137,7 +137,7 @@ public class CuckooTest
     {
         // Changing phone number to new value...
         final String newPhoneNo = "" + new Date().getTime();
-        LOG.info( "testTransactionalCallWithCMT(): changing phone number to: " + newPhoneNo );
+        LOG.info( "testTransactionalCallWithLocalTransaction(): changing phone number to: " + newPhoneNo );
         MappedRecord record = createInputRecordForChangingCustomerPhoneNumber( newPhoneNo );
         MappedRecord result = ejb.callFunctionWithLocalTransaction( record );
 
