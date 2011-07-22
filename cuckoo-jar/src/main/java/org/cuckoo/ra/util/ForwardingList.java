@@ -50,7 +50,7 @@ public class ForwardingList<E> implements List<E>
 
     public Iterator<E> iterator()
     {
-        return l.iterator();  //To change body of implemented methods use File | Settings | File Templates.
+        return l.iterator();
     }
 
     public Object[] toArray()
