@@ -5,28 +5,57 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <cuckoo-ra.version>0.1</cuckoo-ra.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <groupId>org.cuckoo-ra</groupId>
     <artifactId>cuckoo-parent</artifactId>
     <packaging>pom</packaging>
-    <version>${cuckoo-ra.version}</version>
+    <version>0.1</version>
 
     <modules>
         <module>cuckoo-rar</module>
         <module>cuckoo-jar</module>
     </modules>
 
+    <url>http://cuckoo-ra.sourceforge.net/</url>
+
+    <distributionManagement>
+        <site>
+            <id>local</id>
+            <url>file:///tmp/cuckoo-site-${project.version}</url>
+        </site>
+    </distributionManagement>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
                 <configuration>
                     <source>1.5</source>
                     <target>1.5</target>
                     <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.0-beta-3</version>
+                <configuration>
+                    <reportPlugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-project-info-reports-plugin</artifactId>
+                            <version>2.3.1</version>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-javadoc-plugin</artifactId>
+                            <version>2.7</version>
+                        </plugin>
+                    </reportPlugins>
                 </configuration>
             </plugin>
         </plugins>
@@ -37,13 +66,13 @@
             <dependency>
                 <groupId>org.cuckoo-ra</groupId>
                 <artifactId>cuckoo-jar</artifactId>
-                <version>${cuckoo-ra.version}</version>
+                <version>0.1</version>
             </dependency>
             <dependency>
                 <groupId>org.cuckoo-ra</groupId>
                 <artifactId>cuckoo-rar</artifactId>
                 <type>rar</type>
-                <version>${cuckoo-ra.version}</version>
+                <version>0.1</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>

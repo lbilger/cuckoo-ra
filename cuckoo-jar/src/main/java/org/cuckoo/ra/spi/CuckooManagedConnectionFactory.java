@@ -73,6 +73,9 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
         if ( !initialized )
         {
             final String destinationName = getDestinationName();
+
+            LOG.info( "Registering new SAP destination named " + destinationName );
+
             resourceAdapter.registerDestination( destinationName,
                     JCoDestinationUtil.createJCoDestinationProperties( getConfigurationProperties() ) );
             initialized = true;

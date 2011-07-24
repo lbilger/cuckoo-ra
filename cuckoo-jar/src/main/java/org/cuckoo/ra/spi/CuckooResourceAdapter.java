@@ -36,7 +36,7 @@ import javax.transaction.xa.XAResource;
 import java.util.Properties;
 
 
-public class CuckooResourceAdapter implements ResourceAdapter
+public final class CuckooResourceAdapter implements ResourceAdapter
 {
     private static final Logger LOG = LoggerFactory.getLogger( CuckooResourceAdapter.class );
 
@@ -88,7 +88,8 @@ public class CuckooResourceAdapter implements ResourceAdapter
     public void start( BootstrapContext ctx )
             throws ResourceAdapterInternalException
     {
-        LOG.trace( "CuckooResourceAdapter.start(" + ctx + ")" );
+        LOG.info( "Starting " + resourceAdapterMetaData.getAdapterName() + " Version " +
+                resourceAdapterMetaData.getAdapterVersion() );
         Environment.registerDestinationDataProvider( destinationDataProvider );
     }
 
@@ -98,7 +99,8 @@ public class CuckooResourceAdapter implements ResourceAdapter
      */
     public void stop()
     {
-        LOG.trace( "CuckooResourceAdapter.stop()" );
+        LOG.info( "Stopping " + resourceAdapterMetaData.getAdapterName() + " Version " +
+                resourceAdapterMetaData.getAdapterVersion() );
         Environment.unregisterDestinationDataProvider( destinationDataProvider );
     }
 
@@ -118,7 +120,7 @@ public class CuckooResourceAdapter implements ResourceAdapter
 
     void registerDestination( String destinationName, Properties properties ) throws ResourceException
     {
-        LOG.info( "Cuckoo-RA: registering JCo destination '" + destinationName + "' with properties: " + properties );
+        LOG.info( "Cuckoo-RA: registering JCo destination '" + destinationName + "'" );
 
         if ( destinationDataProvider.wasAdded( destinationName ) )
         {
@@ -143,5 +145,47 @@ public class CuckooResourceAdapter implements ResourceAdapter
         LOG.trace( "CuckooResourceAdapter.getRecordFactory()" );
 
         return recordFactory;
+    }
+
+    @Override
+    public boolean equals( Object o )
+    {
+        if ( this == o )
+        {
+            return true;
+        }
+        if ( o == null || getClass() != o.getClass() )
+        {
+            return false;
+        }
+
+        CuckooResourceAdapter that = ( CuckooResourceAdapter ) o;
+
+        if ( destinationDataProvider != null ? !destinationDataProvider.equals( that.destinationDataProvider ) :
+             that.destinationDataProvider != null )
+        {
+            return false;
+        }
+        if ( recordFactory != null ? !recordFactory.equals( that.recordFactory ) : that.recordFactory != null )
+        {
+            return false;
+        }
+        //noinspection RedundantIfStatement
+        if ( resourceAdapterMetaData != null ? !resourceAdapterMetaData.equals( that.resourceAdapterMetaData ) :
+             that.resourceAdapterMetaData != null )
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = destinationDataProvider != null ? destinationDataProvider.hashCode() : 0;
+        result = 31 * result + ( resourceAdapterMetaData != null ? resourceAdapterMetaData.hashCode() : 0 );
+        result = 31 * result + ( recordFactory != null ? recordFactory.hashCode() : 0 );
+        return result;
     }
 }

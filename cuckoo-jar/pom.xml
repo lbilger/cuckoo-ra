@@ -5,13 +5,13 @@
     <parent>
         <groupId>org.cuckoo-ra</groupId>
         <artifactId>cuckoo-parent</artifactId>
-        <version>${cuckoo-ra.version}</version>
+        <version>0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.cuckoo-ra</groupId>
     <artifactId>cuckoo-jar</artifactId>
-    <version>${cuckoo-ra.version}</version>
+    <version>0.1</version>
 
     <dependencies>
         <dependency>

@@ -43,6 +43,4 @@ public class CuckooConnectionManager implements ConnectionManager
    {
       return null;
    }
-
-
 }
