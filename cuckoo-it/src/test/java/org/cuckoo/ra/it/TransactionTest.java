@@ -49,9 +49,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 @RunWith( Arquillian.class )
-public class CuckooTest
+public class TransactionTest
 {
-    private static final Logger LOG = LoggerFactory.getLogger( CuckooTest.class.getName() );
+    private static final Logger LOG = LoggerFactory.getLogger( TransactionTest.class.getName() );
 
     private static final String DEPLOYMENT_NAME = "CuckooTestRA";
 
@@ -71,12 +71,12 @@ public class CuckooTest
         ResourceAdapterArchive rar =
                 ShrinkWrap.create( ResourceAdapterArchive.class, DEPLOYMENT_NAME + ".rar" );
         rar.addLibrary( jar );
-        rar.addManifestResource( CuckooTest.class.getResource( "/META-INF/ra.xml" ), "ra.xml" );
+        rar.addManifestResource( TransactionTest.class.getResource( "/META-INF/ra.xml" ), "ra.xml" );
 
         final JavaArchive testJar = ShrinkWrap.create( JavaArchive.class, "rartest.jar" )
                 .addClasses(
                         TransactionTestEjb.class, TransactionTestEjbBean.class,
-                        CuckooTest.class );
+                        TransactionTest.class );
 
         // must be test.ear, otherwise Arquillian does not guess the correct JNDI-name for the EJBs
         EnterpriseArchive ear = ShrinkWrap.create( EnterpriseArchive.class, "test.ear" );
