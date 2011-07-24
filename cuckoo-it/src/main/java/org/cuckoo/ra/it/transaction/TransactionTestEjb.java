@@ -17,14 +17,14 @@
  * with Cuckoo Resource Adapter for SAP. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.cuckoo.ra.it;
+package org.cuckoo.ra.it.transaction;
 
 import javax.ejb.Local;
 import javax.resource.ResourceException;
 import javax.resource.cci.MappedRecord;
 
 @Local
-public interface TestEjb
+public interface TransactionTestEjb
 {
     MappedRecord callFunctionWithoutTransaction( MappedRecord input ) throws ResourceException;
 

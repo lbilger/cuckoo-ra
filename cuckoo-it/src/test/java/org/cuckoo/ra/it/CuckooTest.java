@@ -22,6 +22,8 @@ import org.cuckoo.ra.cci.CuckooConnection;
 import org.cuckoo.ra.cci.CuckooIndexedRecord;
 import org.cuckoo.ra.cci.CuckooMappedRecord;
 import org.cuckoo.ra.common.ConnectionMetaDataImpl;
+import org.cuckoo.ra.it.transaction.TransactionTestEjb;
+import org.cuckoo.ra.it.transaction.TransactionTestEjbBean;
 import org.cuckoo.ra.jco.CuckooDestinationDataProvider;
 import org.cuckoo.ra.spi.CuckooResourceAdapter;
 import org.cuckoo.ra.util.ForwardingList;
@@ -56,7 +58,7 @@ public class CuckooTest
     private static final String CUSTOMER_NUMBER = "00000001";
 
     @EJB
-    private TestEjb ejb;
+    private TransactionTestEjb ejb;
 
     @Deployment
     public static EnterpriseArchive createDeployment()
@@ -73,7 +75,7 @@ public class CuckooTest
 
         final JavaArchive testJar = ShrinkWrap.create( JavaArchive.class, "rartest.jar" )
                 .addClasses(
-                        TestEjb.class, TestEjbBean.class,
+                        TransactionTestEjb.class, TransactionTestEjbBean.class,
                         CuckooTest.class );
 
         // must be test.ear, otherwise Arquillian does not guess the correct JNDI-name for the EJBs

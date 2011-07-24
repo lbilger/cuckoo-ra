@@ -17,7 +17,7 @@
  * with Cuckoo Resource Adapter for SAP. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.cuckoo.ra.it;
+package org.cuckoo.ra.it.transaction;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
@@ -31,7 +31,7 @@ import javax.resource.cci.LocalTransaction;
 import javax.resource.cci.MappedRecord;
 
 @Stateless
-public class TestEjbBean implements TestEjb
+public class TransactionTestEjbBean implements TransactionTestEjb
 {
     private static final String RA_JNDI_NAME = "java:eis/sap/A12";
 
