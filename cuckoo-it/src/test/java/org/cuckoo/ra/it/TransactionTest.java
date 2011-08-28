@@ -18,21 +18,15 @@
  */
 package org.cuckoo.ra.it;
 
-import org.cuckoo.ra.cci.CuckooConnection;
 import org.cuckoo.ra.cci.CuckooIndexedRecord;
 import org.cuckoo.ra.cci.CuckooMappedRecord;
-import org.cuckoo.ra.common.ConnectionMetaDataImpl;
 import org.cuckoo.ra.it.transaction.TransactionTestEjb;
 import org.cuckoo.ra.it.transaction.TransactionTestEjbBean;
-import org.cuckoo.ra.jco.CuckooDestinationDataProvider;
-import org.cuckoo.ra.spi.CuckooResourceAdapter;
-import org.cuckoo.ra.util.ForwardingList;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -44,6 +38,7 @@ import javax.resource.cci.IndexedRecord;
 import javax.resource.cci.MappedRecord;
 import java.util.Date;
 
+import static org.cuckoo.ra.it.ArquillianHelper.createEar;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
@@ -53,8 +48,6 @@ public class TransactionTest
 {
     private static final Logger LOG = LoggerFactory.getLogger( TransactionTest.class.getName() );
 
-    private static final String DEPLOYMENT_NAME = "CuckooTestRA";
-
     private static final String CUSTOMER_NUMBER = "00000001";
 
     @EJB
@@ -63,29 +56,12 @@ public class TransactionTest
     @Deployment
     public static EnterpriseArchive createDeployment()
     {
-        JavaArchive jar = ShrinkWrap.create( JavaArchive.class, DEPLOYMENT_NAME + ".jar" );
-        jar.addPackages( false, CuckooResourceAdapter.class.getPackage(), CuckooConnection.class.getPackage(),
-                ForwardingList.class.getPackage(), CuckooDestinationDataProvider.class.getPackage(),
-                ConnectionMetaDataImpl.class.getPackage() );
-
-        ResourceAdapterArchive rar =
-                ShrinkWrap.create( ResourceAdapterArchive.class, DEPLOYMENT_NAME + ".rar" );
-        rar.addLibrary( jar );
-        rar.addManifestResource( TransactionTest.class.getResource( "/META-INF/ra.xml" ), "ra.xml" );
-
         final JavaArchive testJar = ShrinkWrap.create( JavaArchive.class, "rartest.jar" )
                 .addClasses(
                         TransactionTestEjb.class, TransactionTestEjbBean.class,
                         TransactionTest.class );
 
-        // must be test.ear, otherwise Arquillian does not guess the correct JNDI-name for the EJBs
-        EnterpriseArchive ear = ShrinkWrap.create( EnterpriseArchive.class, "test.ear" );
-        ear.addModule( "cuckoo-jboss-ds.xml" );
-        ear.addApplicationResource( "jboss-app.xml" );
-        ear.addModule( rar );
-        ear.addModule( testJar );
-
-        return ear;
+        return createEar( testJar );
     }
 
     @Test

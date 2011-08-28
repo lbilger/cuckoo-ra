@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 import javax.resource.ResourceException;
 import javax.resource.cci.MappedRecord;
 import javax.resource.cci.Record;
-import javax.resource.spi.LocalTransactionException;
+import javax.resource.spi.*;
 import java.util.HashMap;
 
 public class JCoAdapter
@@ -59,7 +59,6 @@ public class JCoAdapter
         }
     };
 
-
     private final JCoDestination destination;
 
     private final JCoRecordMapper mapper = new JCoRecordMapper();
@@ -70,22 +69,28 @@ public class JCoAdapter
 
         if ( applicationProperties == null )
         {
-            // use the logon properties as configured for the resource adapter or managed connection factory
+            // use the logon properties as configured for the resource adapter or overwritten by
+            // the managed connection factory
             destination = getDestination( destinationName );
         }
         else
         {
-            // use the application provided logon properties
+            // use the application provided logon properties and/or the credentials
+            // from container-managed security setup.
             destination = getDestination( destinationName ).createCustomDestination();
-            final JCoCustomDestination customDestination = ( JCoCustomDestination ) destination;
-            final JCoCustomDestination.UserData logonData = customDestination.getUserLogonData();
-            logonData.setAliasUser( applicationProperties.getAliasUser() );
-            logonData.setClient( applicationProperties.getClient() );
-            logonData.setLanguage( applicationProperties.getLanguage() );
-            logonData.setPassword( applicationProperties.getPassword() );
-            logonData.setSSOTicket( applicationProperties.getSsoTicket() );
-            logonData.setUser( applicationProperties.getUser() );
-            logonData.setX509Certificate( applicationProperties.getX509Certificate() );
+            setCustomLogonData( ( ( JCoCustomDestination ) destination ).getUserLogonData(), applicationProperties );
+        }
+        try
+        {
+            destination.ping();
+        }
+        catch ( JCoException e )
+        {
+            if ( e.getGroup() == JCoException.JCO_ERROR_LOGON_FAILURE )
+            {
+                throw new javax.resource.spi.SecurityException( "Failed logging on to SAP", e );
+            }
+            throw new ResourceException( "Error getting Destination", e );
         }
     }
 
@@ -153,7 +158,6 @@ public class JCoAdapter
         }
     }
 
-
     public ConnectionMetaDataImpl createConnectionMetaData() throws ResourceException
     {
         LOG.trace( "JCoAdapter.createConnectionMetaData()" );
@@ -170,6 +174,47 @@ public class JCoAdapter
         catch ( JCoException e )
         {
             throw new ResourceException( "Error getting connection meta data", e );
+        }
+    }
+
+
+    private void setCustomLogonData( JCoCustomDestination.UserData logonData,
+                                     ApplicationProperties applicationProperties )
+    {
+        String aliasUser = applicationProperties.getAliasUser();
+        if ( aliasUser != null )
+        {
+            logonData.setAliasUser( aliasUser );
+        }
+        String client = applicationProperties.getClient();
+        if ( client != null )
+        {
+            logonData.setClient( client );
+        }
+        String language = applicationProperties.getLanguage();
+        if ( language != null )
+        {
+            logonData.setLanguage( language );
+        }
+        String password = applicationProperties.getPassword();
+        if ( password != null )
+        {
+            logonData.setPassword( password );
+        }
+        String ssoTicket = applicationProperties.getSsoTicket();
+        if ( ssoTicket != null )
+        {
+            logonData.setSSOTicket( ssoTicket );
+        }
+        String user = applicationProperties.getUser();
+        if ( user != null )
+        {
+            logonData.setUser( user );
+        }
+        String x509Certificate = applicationProperties.getX509Certificate();
+        if ( x509Certificate != null )
+        {
+            logonData.setX509Certificate( x509Certificate );
         }
     }
 

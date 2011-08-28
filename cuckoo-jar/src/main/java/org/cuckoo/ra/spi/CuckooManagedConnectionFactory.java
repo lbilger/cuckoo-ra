@@ -35,6 +35,8 @@ import javax.resource.spi.ResourceAdapterAssociation;
 import javax.resource.spi.security.PasswordCredential;
 import javax.security.auth.Subject;
 import java.io.PrintWriter;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Set;
 
 /**
@@ -119,6 +121,8 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
     {
         LOG.trace(
                 "CuckooManagedConnectionFactory.createManagedConnection(Subject, ConnectionRequestInfo)" );
+        LOG.trace( "Parameters passed by container: subject=" + subject + ", connectionRequestInfo=" +
+                connectionRequestInfo );
 
         assertInitialized();
 
@@ -128,16 +132,17 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
         {
             LOG.debug( "Container managed sign-on. Subject: " + subject );
 
-            final Set<PasswordCredential> passwordCredentials = subject
-                    .getPrivateCredentials( PasswordCredential.class );
+            final Set<PasswordCredential> passwordCredentials = getPasswordCredentials( subject );
 
             if ( passwordCredentials != null && !passwordCredentials.isEmpty() )
             {
-                LOG.debug( "Password based sign-on based on PasswordCredentials" );
+                LOG.debug( "Password based sign-on based on PasswordCredentials, size=" + passwordCredentials.size() );
 
                 for ( final PasswordCredential pc : passwordCredentials )
                 {
-                    if ( equals( pc.getManagedConnectionFactory() ) )
+                    LOG.trace( "ManagedConnectionFactory of PC=" + pc.getManagedConnectionFactory() );
+
+                    if ( this.equals( pc.getManagedConnectionFactory() ) )
                     {
                         if ( applicationProperties != null )
                         {
@@ -145,19 +150,20 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
                                     "Overwriting application defined configuration with user/password from Credentials" );
                             applicationProperties.setUser( pc.getUserName() );
                             applicationProperties.setPassword( String.valueOf( pc.getPassword() ) );
+                            return new CuckooManagedConnection( getConfigurationProperties(), applicationProperties );
                         }
                         else
                         {
                             LOG.debug(
                                     "No application-defined configuration info, using configured properties and user/password from Credentials" );
-                            applicationProperties =
-                                    new ApplicationProperties( pc
-                                            .getUserName(), String.valueOf( pc.getPassword() ) );
+                            applicationProperties = new ApplicationProperties( pc.getUserName(),
+                                    String.valueOf( pc.getPassword() ) );
+                            return new CuckooManagedConnection( getConfigurationProperties(), applicationProperties );
                         }
                     }
                 }
                 throw new ResourceException(
-                        "No PasswordCredential found that corresponds to the ManagedConnectionFactory" );
+                        "No PasswordCredential found that corresponds to the ManagedConnectionFactory. Please check your security configuration." );
             }
 
             // TODO Implement single sign-on with SAP logon ticket using org.ietf.jgss.GSSCredential; see JCA 1.5 spec chapter 9.1.5
@@ -166,7 +172,7 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
         else if ( applicationProperties == null )
         {
             LOG.debug(
-                    "No configuration provided by application, use configuration from configuration only" );
+                    "No configuration provided by application, use configured properties" );
         }
         else
         {
@@ -286,6 +292,25 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
         }
 
         this.resourceAdapter = ( CuckooResourceAdapter ) ra;
+    }
+
+    /**
+     * Gets the given Subject's PasswordCredentials via AccessController.doPrivileged(), since
+     * Subject.getPrivateCredentials() may throw a SecurityException in a secured environment.
+     *
+     * @param subject The Subject
+     * @return A Set of PasswordCredentials, as returned by Subject.getPrivateCredentials().
+     */
+    public Set<PasswordCredential> getPasswordCredentials( final Subject subject )
+    {
+        return AccessController.doPrivileged( new PrivilegedAction<Set<PasswordCredential>>()
+        {
+            public Set<PasswordCredential> run()
+            {
+                return subject.getPrivateCredentials( PasswordCredential.class );
+            }
+        }
+        );
     }
 
     @Override
