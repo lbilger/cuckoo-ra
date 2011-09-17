@@ -17,18 +17,14 @@
  * with Cuckoo Resource Adapter for SAP. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.cuckoo.ra.it.security;
+package org.cuckoo.ra.it.transaction;
 
-import org.cuckoo.ra.common.ApplicationProperties;
-
-import javax.ejb.Local;
+import javax.ejb.Remote;
 import javax.resource.ResourceException;
+import javax.resource.cci.MappedRecord;
 
-@Local
-public interface SecurityTestEjb
+@Remote
+public interface TransactionTestEjbRemote
 {
-    String callFunctionAndReturnEisUser() throws ResourceException;
-
-    String callFunctionWithCustomPropertiesAndReturnEisUser( ApplicationProperties properties )
-            throws ResourceException;
+    MappedRecord callFunctionWithContainerManagedTransaction( MappedRecord input ) throws ResourceException;
 }

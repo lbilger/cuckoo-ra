@@ -101,6 +101,8 @@ public final class CuckooResourceAdapter implements ResourceAdapter
     {
         LOG.info( "Stopping " + resourceAdapterMetaData.getAdapterName() + " Version " +
                 resourceAdapterMetaData.getAdapterVersion() );
+
+        destinationDataProvider.removeAllDestinations();
         Environment.unregisterDestinationDataProvider( destinationDataProvider );
     }
 

@@ -54,6 +54,8 @@ public class CuckooManagedConnection implements ManagedConnection
     private final CuckooSpiLocalTransaction localTransaction;
     private final ConnectionMetaDataImpl metaData;
 
+    private boolean inTransaction = false;
+
 
     CuckooManagedConnection( ConfigurationProperties configurationProperties,
                              ApplicationProperties applicationProperties ) throws ResourceException
@@ -86,7 +88,7 @@ public class CuckooManagedConnection implements ManagedConnection
      * @throws ResourceException generic exception if operation fails
      */
     public CuckooConnection getConnection( Subject subject,
-                                              ConnectionRequestInfo connectionRequestInfo ) throws ResourceException
+                                           ConnectionRequestInfo connectionRequestInfo ) throws ResourceException
     {
         LOG.trace( "CuckooManagedConnection.getConnection( Subject, ConnectionRequestInfo )" );
 
@@ -230,7 +232,7 @@ public class CuckooManagedConnection implements ManagedConnection
      *
      * @return LocalTransaction instance
      */
-    public CuckooSpiLocalTransaction getLocalTransaction() 
+    public CuckooSpiLocalTransaction getLocalTransaction()
     {
         LOG.trace( "CuckooManagedConnection.getLocalTransaction()" );
         return localTransaction;
@@ -317,7 +319,29 @@ public class CuckooManagedConnection implements ManagedConnection
     {
         LOG.trace( "CuckooManagedConnection.executeFunction()" );
 
-        return jCoAdapter.executeFunction( functionName, input );
+        if ( inTransaction )
+        {
+            LOG.debug( "Executing function in transaction" );
+
+            return jCoAdapter.executeFunction( functionName, input );
+        }
+        else
+        {
+            LOG.debug( "Executing function with auto-commit" );
+
+            jCoAdapter.startTransaction();
+            try
+            {
+                MappedRecord output = jCoAdapter.executeFunction( functionName, input );
+                jCoAdapter.commitTransaction();
+                return output;
+            }
+            catch ( ResourceException e )
+            {
+                jCoAdapter.rollbackTransaction();
+                throw e;
+            }
+        }
     }
 
     void startTransaction()
@@ -325,6 +349,7 @@ public class CuckooManagedConnection implements ManagedConnection
         LOG.trace( "CuckooManagedConnection.startTransaction()" );
 
         jCoAdapter.startTransaction();
+        inTransaction = true;
     }
 
     void commitTransaction() throws ResourceException
@@ -332,6 +357,7 @@ public class CuckooManagedConnection implements ManagedConnection
         LOG.trace( "CuckooManagedConnection.commitTransaction()" );
 
         jCoAdapter.commitTransaction();
+        inTransaction = false;
     }
 
     void rollbackTransaction() throws ResourceException
@@ -339,6 +365,7 @@ public class CuckooManagedConnection implements ManagedConnection
         LOG.trace( "CuckooManagedConnection.rollbackTransaction()" );
 
         jCoAdapter.rollbackTransaction();
+        inTransaction = false;
     }
 
     public void notifyLocalTransactionStartedEvent( Connection connectionHandle )
@@ -355,7 +382,6 @@ public class CuckooManagedConnection implements ManagedConnection
                 eventListener.localTransactionStarted( event );
             }
         }
-
     }
 
     public void notifyLocalTransactionCommittedEvent( Connection connectionHandle )

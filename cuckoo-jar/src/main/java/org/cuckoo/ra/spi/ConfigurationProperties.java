@@ -72,14 +72,6 @@ public interface ConfigurationProperties
 
     void setJcoPeakLimit(String jcoPeakLimit);
 
-    void setJcoPoolCapacity(String jcoPoolCapacity);
-
-    void setJcoExpirationTime(String jcoExpirationTime);
-
-    void setJcoExpirationCheckPeriod(String jcoExpirationCheckPeriod);
-
-    void setJcoMaxGetClientTime(String jcoMaxGetClientTime);
-
     void setJcoRepositoryDestination(String jcoRepositoryDestination);
 
     void setJcoRepositoryUser(String jcoRepositoryUser);
@@ -133,14 +125,6 @@ public interface ConfigurationProperties
     String getJcoSncLibrary();
 
     String getJcoPeakLimit();
-
-    String getJcoPoolCapacity();
-
-    String getJcoExpirationTime();
-
-    String getJcoExpirationCheckPeriod();
-
-    String getJcoMaxGetClientTime();
 
     String getJcoRepositoryDestination();
 

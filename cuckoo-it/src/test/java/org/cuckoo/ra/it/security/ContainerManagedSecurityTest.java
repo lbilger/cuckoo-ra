@@ -16,11 +16,10 @@
  * You should have received a copy of the GNU Lesser General Public License along
  * with Cuckoo Resource Adapter for SAP. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.cuckoo.ra.it;
+package org.cuckoo.ra.it.security;
 
-import org.cuckoo.ra.it.security.SecurityTestEjb;
-import org.cuckoo.ra.it.security.SecurityTestEjbBean;
-import org.jboss.arquillian.api.Deployment;
+import org.cuckoo.ra.common.ApplicationProperties;
+import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
@@ -42,14 +41,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static org.cuckoo.ra.it.ArquillianHelper.createEar;
+import static org.cuckoo.ra.it.util.ArquillianHelper.createEar;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 @RunWith( Arquillian.class )
-public class SecurityTest
+public class ContainerManagedSecurityTest
 {
     @EJB
     private SecurityTestEjb ejb;
@@ -60,12 +59,13 @@ public class SecurityTest
         final JavaArchive testJar = ShrinkWrap.create( JavaArchive.class, "rartest.jar" )
                 .addClasses(
                         SecurityTestEjb.class, SecurityTestEjbBean.class,
-                        SecurityTest.class
+                        ContainerManagedSecurityTest.class
                 );
-        testJar.addManifestResource( SecurityTest.class.getResource( "/jboss5/cuckoo-jboss-beans.xml" ),
+        testJar.addAsManifestResource(
+                ContainerManagedSecurityTest.class.getResource( "/jboss5/cuckoo-jboss-beans.xml" ),
                 "cuckoo-jboss-beans.xml" );
 
-        return createEar( testJar );
+        return createEar( testJar, "jboss5/cuckoo-secure-jboss-ds.xml" );
     }
 
     @Test
@@ -97,10 +97,15 @@ public class SecurityTest
         }
     }
 
-    //@Test
-    public void overwritesApplicationProvidedPropertiesWithSubjectProperties()
+    @Test
+    public void overwritesApplicationProvidedPropertiesWithSubjectProperties() throws Exception
     {
-        // TODO
+        ApplicationProperties properties = new ApplicationProperties( "NON_EXISTING_USER", "A_PASSWORD" );
+        LoginContext loginContext = login( "SAPUSER2" );
+        String username = ejb.callFunctionWithCustomPropertiesAndReturnEisUser( properties );
+        loginContext.logout();
+
+        assertThat( username, equalTo( "SAPUSER2" ) );
     }
 
     private void assertHasSecurityExceptionInStacktrace( Throwable e )

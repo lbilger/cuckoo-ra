@@ -16,13 +16,11 @@
  * You should have received a copy of the GNU Lesser General Public License along
  * with Cuckoo Resource Adapter for SAP. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.cuckoo.ra.it;
+package org.cuckoo.ra.it.transaction;
 
 import org.cuckoo.ra.cci.CuckooIndexedRecord;
 import org.cuckoo.ra.cci.CuckooMappedRecord;
-import org.cuckoo.ra.it.transaction.TransactionTestEjb;
-import org.cuckoo.ra.it.transaction.TransactionTestEjbBean;
-import org.jboss.arquillian.api.Deployment;
+import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
@@ -38,9 +36,11 @@ import javax.resource.cci.IndexedRecord;
 import javax.resource.cci.MappedRecord;
 import java.util.Date;
 
-import static org.cuckoo.ra.it.ArquillianHelper.createEar;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.cuckoo.ra.it.util.ArquillianHelper.createEar;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 @RunWith( Arquillian.class )
@@ -58,64 +58,63 @@ public class TransactionTest
     {
         final JavaArchive testJar = ShrinkWrap.create( JavaArchive.class, "rartest.jar" )
                 .addClasses(
-                        TransactionTestEjb.class, TransactionTestEjbBean.class,
-                        TransactionTest.class );
+                        TransactionTestEjb.class, TransactionTestEjbRemote.class,
+                        TransactionTestEjbBean.class, TransactionTest.class );
 
-        return createEar( testJar );
+        return createEar( testJar, "jboss5/cuckoo-jboss-ds.xml" );
     }
 
     @Test
-    public void testCallWithoutTransaction() throws ResourceException
+    public void autoCommitsWhenCalledWithoutTransaction() throws ResourceException
     {
         // Changing phone number to new value...
-        final String newPhoneNo = "" + new Date().getTime();
+        final String newPhoneNo = "" + System.currentTimeMillis();
         LOG.info( "testTransactionalCallWithoutTransaction(): changing phone number to: " + newPhoneNo );
         MappedRecord record = createInputRecordForChangingCustomerPhoneNumber( newPhoneNo );
         MappedRecord result = ejb.callFunctionWithoutTransaction( record );
 
         assertNoSapError( result );
 
-        // Test: Phone number should not be changed in SAP
+        // Test: Phone number should be changed in SAP
         record = createInputRecordForGettingCustomerData();
         result = ejb.callFunctionWithoutTransaction( record );
 
         assertNoSapError( result );
 
         final IndexedRecord customerList = ( IndexedRecord ) result.get( "CUSTOMER_LIST" );
-        assertEquals( 1, customerList.size() );
+        assertThat( customerList.size(), is( 1 ) );
         final MappedRecord customerData = ( MappedRecord ) customerList.get( 0 );
-        assertFalse( newPhoneNo.equals( customerData.get( "PHONE" ) ) );
+        assertThat( ( String ) customerData.get( "PHONE" ), equalTo( newPhoneNo ) );
     }
 
-
     @Test
-    public void testTransactionalCallWithCMT() throws ResourceException
+    public void commitsWhenCalledWithContainerManagedTransaction() throws ResourceException
     {
         // Changing phone number to new value...
-        final String newPhoneNo = "" + new Date().getTime();
+        final String newPhoneNo = "" + System.currentTimeMillis();
         LOG.info( "testTransactionalCallWithCMT(): changing phone number to: " + newPhoneNo );
         MappedRecord record = createInputRecordForChangingCustomerPhoneNumber( newPhoneNo );
         MappedRecord result = ejb.callFunctionWithContainerManagedTransaction( record );
 
         assertNoSapError( result );
 
-        // Test: was it really changes and committed?
+        // Test: was it really changed and committed?
         record = createInputRecordForGettingCustomerData();
         result = ejb.callFunctionWithoutTransaction( record );
 
         assertNoSapError( result );
 
         final IndexedRecord customerList = ( IndexedRecord ) result.get( "CUSTOMER_LIST" );
-        assertEquals( 1, customerList.size() );
+        assertThat( customerList.size(), is( 1 ) );
         final MappedRecord customerData = ( MappedRecord ) customerList.get( 0 );
-        assertEquals( newPhoneNo, customerData.get( "PHONE" ) );
+        assertThat( ( String ) customerData.get( "PHONE" ), equalTo( newPhoneNo ) );
     }
 
     @Test
-    public void testTransactionalCallWithCMTAndRollback() throws ResourceException
+    public void rollsBackWhenCallWithContainerManagedTransactionAndAnErrorHappens() throws ResourceException
     {
         // Changing phone number to new value...
-        final String newPhoneNo = "" + new Date().getTime();
+        final String newPhoneNo = "" + System.currentTimeMillis();
         LOG.info( "testTransactionalCallWithCMT(): changing phone number to: " + newPhoneNo );
         MappedRecord record = createInputRecordForChangingCustomerPhoneNumber( newPhoneNo );
         try
@@ -135,13 +134,13 @@ public class TransactionTest
         assertNoSapError( result );
 
         final IndexedRecord customerList = ( IndexedRecord ) result.get( "CUSTOMER_LIST" );
-        assertEquals( 1, customerList.size() );
+        assertThat( customerList.size(), is( 1 ) );
         final MappedRecord customerData = ( MappedRecord ) customerList.get( 0 );
-        assertFalse( newPhoneNo.equals( customerData.get( "PHONE" ) ) );
+        assertThat( ( String ) customerData.get( "PHONE" ), not( equalTo( newPhoneNo ) ) );
     }
 
     @Test
-    public void testTransactionalCallWithLocalTransaction() throws ResourceException
+    public void commitsWhenCalledWithLocalTransaction() throws ResourceException
     {
         // Changing phone number to new value...
         final String newPhoneNo = "" + new Date().getTime();
@@ -153,14 +152,44 @@ public class TransactionTest
 
         // Test: was it really changes and committed?
         record = createInputRecordForGettingCustomerData();
-        result = ejb.callFunctionWithoutTransaction( record );
+        result = ejb.callFunctionWithLocalTransaction( record );
 
         assertNoSapError( result );
 
         final IndexedRecord customerList = ( IndexedRecord ) result.get( "CUSTOMER_LIST" );
-        assertEquals( 1, customerList.size() );
+        assertThat( customerList.size(), is( 1 ) );
         final MappedRecord customerData = ( MappedRecord ) customerList.get( 0 );
-        assertEquals( newPhoneNo, customerData.get( "PHONE" ) );
+        assertThat( ( String ) customerData.get( "PHONE" ), equalTo( newPhoneNo ) );
+    }
+
+    @Test
+    public void rollsBackWhenCalledWithLocalTransactionAndErrorHappens() throws ResourceException
+    {
+        // Changing phone number to new value...
+        final String newPhoneNo = "" + new Date().getTime();
+        LOG.info( "testTransactionalCallWithLocalTransaction(): changing phone number to: " + newPhoneNo );
+        MappedRecord record = createInputRecordForChangingCustomerPhoneNumber( newPhoneNo );
+
+        try
+        {
+            ejb.callFunctionWithLocalTransactionAndThrowRuntimeException( record );
+            fail();
+        }
+        catch ( RuntimeException e )
+        {
+            // expected
+        }
+
+        // Test: was it really changes and committed?
+        record = createInputRecordForGettingCustomerData();
+        MappedRecord result = ejb.callFunctionWithLocalTransaction( record );
+
+        assertNoSapError( result );
+
+        final IndexedRecord customerList = ( IndexedRecord ) result.get( "CUSTOMER_LIST" );
+        assertThat( customerList.size(), is( 1 ) );
+        final MappedRecord customerData = ( MappedRecord ) customerList.get( 0 );
+        assertThat( ( String ) customerData.get( "PHONE" ), not( equalTo( newPhoneNo ) ) );
     }
 
     @SuppressWarnings( "unchecked" )

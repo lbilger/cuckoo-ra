@@ -61,10 +61,6 @@ public class JCoDestinationUtil
         addPropertyNullSafe(properties, DestinationDataProvider.JCO_SNC_MYNAME, config.getJcoSncMyName());
         addPropertyNullSafe(properties, DestinationDataProvider.JCO_SNC_LIBRARY, config.getJcoSncLibrary());
         addPropertyNullSafe(properties, DestinationDataProvider.JCO_PEAK_LIMIT, config.getJcoPeakLimit());
-        addPropertyNullSafe(properties, DestinationDataProvider.JCO_POOL_CAPACITY, config.getJcoPoolCapacity());
-        addPropertyNullSafe(properties, DestinationDataProvider.JCO_EXPIRATION_TIME, config.getJcoExpirationTime());
-        addPropertyNullSafe(properties, DestinationDataProvider.JCO_EXPIRATION_PERIOD, config.getJcoExpirationCheckPeriod());
-        addPropertyNullSafe(properties, DestinationDataProvider.JCO_MAX_GET_TIME, config.getJcoMaxGetClientTime());
         addPropertyNullSafe(properties, DestinationDataProvider.JCO_REPOSITORY_DEST, config.getJcoRepositoryDestination());
         addPropertyNullSafe(properties, DestinationDataProvider.JCO_REPOSITORY_USER, config.getJcoRepositoryUser());
         addPropertyNullSafe(properties, DestinationDataProvider.JCO_REPOSITORY_PASSWD, config.getJcoRepositoryPassword());

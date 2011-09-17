@@ -160,31 +160,7 @@
                     <config-property-type>java.lang.String</config-property-type>
                     <config-property-value/>
                 </config-property>
-                <config-property>     
-                    <!-- jco.destination.pool_capacity - Maximum number of idle connections kept open by the destination. A value of 0 has the effect that there is no connection pooling. -->
-                    <config-property-name>jcoPoolCapacity</config-property-name>
-                    <config-property-type>java.lang.String</config-property-type>
-                    <config-property-value/>
-                </config-property>
-                <config-property>     
-                    <!-- jco.destination.expiration_time - Time in ms after that the connections hold by the internal pool can be closed -->
-                    <config-property-name>jcoExpirationTime</config-property-name>
-                    <config-property-type>java.lang.String</config-property-type>
-                    <config-property-value/>
-                </config-property>
-                <config-property>     
-                    <!-- jco.destination.expiration_check_period - Interval in ms with which the timeout checker thread checks the connections in the pool for expiration -->
-                    <config-property-name>jcoExpirationCheckPeriod</config-property-name>
-                    <config-property-type>java.lang.String</config-property-type>
-                    <config-property-value/>
-                </config-property>
-                <config-property>     
-                    <!-- jco.destination.max_get_client_time - Max time in ms to wait for a connection, if the max allowed number of connections is allocated by the application -->
-                    <config-property-name>jcoMaxGetClientTime</config-property-name>
-                    <config-property-type>java.lang.String</config-property-type>
-                    <config-property-value/>
-                </config-property>
-                <config-property>     
+                <config-property>
                     <!-- jco.destination.repository_destination - Specifies which destination should be used as repository, i.e. use this destination's repository -->
                     <config-property-name>jcoRepositoryDestination</config-property-name>
                     <config-property-type>java.lang.String</config-property-type>

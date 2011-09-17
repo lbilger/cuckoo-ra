@@ -141,6 +141,7 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
                 for ( final PasswordCredential pc : passwordCredentials )
                 {
                     LOG.trace( "ManagedConnectionFactory of PC=" + pc.getManagedConnectionFactory() );
+                    LOG.trace( "ManagedConnectionFactory of ME=" + this );
 
                     if ( this.equals( pc.getManagedConnectionFactory() ) )
                     {

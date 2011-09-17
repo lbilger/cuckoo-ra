@@ -64,6 +64,16 @@ public class CuckooDestinationDataProvider implements DestinationDataProvider
         eventListener.deleted( destinationName );
     }
 
+    public void removeAllDestinations( )
+    {
+        LOG.info( "CuckooDestinationDataProvider.removeAllDestinations( )" );
+
+        for ( String destinationName : propertiesForDestinationName.keySet() )
+        {
+            removeDestination( destinationName );
+        }
+    }
+
     /**
      * {@inheritDoc}
      */

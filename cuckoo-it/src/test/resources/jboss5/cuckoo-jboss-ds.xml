@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE connection-factories PUBLIC
+        "-//JBoss//DTD JBOSS JCA Config 1.5//EN"
+        "http://www.jboss.org/j2ee/dtd/jboss-ds_1_5.dtd">
 <connection-factories>
 
-	<!-- 
-		a sample connection, if you need another copy the tx-connection-factory 
-		and change the corresponding parameter 
-	-->
-	<tx-connection-factory>
-		<!-- change the JNDI name of the connection, if required -->
-		<jndi-name>eis/sap/A12</jndi-name>
-		<rar-name>test.ear#CuckooTestRA.rar</rar-name>
+    <tx-connection-factory>
+        <!-- change the JNDI name of the connection, if required -->
+        <jndi-name>eis/sap/A12</jndi-name>
+        <local-transaction/>
+        <rar-name>test.ear#CuckooTestRA.rar</rar-name>
 
-		<connection-definition>javax.resource.cci.ConnectionFactory</connection-definition>
+        <connection-definition>javax.resource.cci.ConnectionFactory</connection-definition>
 
         <config-property name="destinationName" type="java.lang.String">A12</config-property>
         <config-property name="jcoApplicationServerHost" type="java.lang.String">192.168.146.129</config-property>
@@ -18,11 +18,12 @@
         <config-property name="jcoClient" type="java.lang.String">001</config-property>
         <config-property name="jcoUser" type="java.lang.String">SAPUSER</config-property>
         <config-property name="jcoPassword" type="java.lang.String">password</config-property>
-        <config-property name="jcoPoolCapacity" type="java.lang.String">1</config-property>
+        <config-property name="jcoPoolCapacity" type="java.lang.String">0</config-property>
+        <config-property name="jcoPeakLimit" type="java.lang.String">40</config-property>
+        <config-property name="jcoMaxGetClientTime" type="java.lang.String">5000</config-property>
 
-        <security-domain>ejb-test</security-domain>
-
-		<local-transaction />
-		<max-pool-size>5</max-pool-size>
-	</tx-connection-factory>
+        <max-pool-size>29</max-pool-size>
+        <blocking-timeout-millis>5000</blocking-timeout-millis>
+        <idle-timeout-minutes>1</idle-timeout-minutes>
+    </tx-connection-factory>
 </connection-factories>

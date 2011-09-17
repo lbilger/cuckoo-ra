@@ -2,12 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent> 
+    <parent>
         <groupId>org.cuckoo-ra</groupId>
         <artifactId>cuckoo-parent</artifactId>
         <version>0.1</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion> 
+    <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.cuckoo-ra</groupId>
     <artifactId>cuckoo-it</artifactId>
@@ -15,8 +15,7 @@
     <version>0.1</version>
 
     <properties>
-        <version.junit>4.8.1</version.junit>
-        <version.org.jboss.arquillian>1.0.0.Alpha4</version.org.jboss.arquillian>
+        <version.org.jboss.arquillian>1.0.0.CR4</version.org.jboss.arquillian>
     </properties>
 
     <profiles>
@@ -42,7 +41,7 @@
                 <dependency>
                     <groupId>org.jboss.arquillian.container</groupId>
                     <artifactId>arquillian-jbossas-remote-5.1</artifactId>
-                    <version>${version.org.jboss.arquillian}</version>
+                    <version>1.0.0.CR2</version>
                 </dependency>
                 <dependency>
                     <groupId>org.jboss.jbossas</groupId>
@@ -51,7 +50,6 @@
                     <type>pom</type>
                 </dependency>
             </dependencies>
-
         </profile>
         <profile>
             <id>jbossas-remote-6</id>
@@ -59,18 +57,13 @@
                 <dependency>
                     <groupId>org.jboss.arquillian.container</groupId>
                     <artifactId>arquillian-jbossas-remote-6</artifactId>
-                    <version>${version.org.jboss.arquillian}</version>
+                    <version>1.0.0.CR2</version>
                 </dependency>
                 <dependency>
                     <groupId>org.jboss.jbossas</groupId>
                     <artifactId>jboss-as-client</artifactId>
-                    <version>6.0.0.20100721-M4</version>
+                    <version>6.0.0.Final</version>
                     <type>pom</type>
-                </dependency>
-                <dependency>
-                    <groupId>javax.enterprise</groupId>
-                    <artifactId>cdi-api</artifactId>
-                    <version>1.0-SP2</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -105,7 +98,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.8.1</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -116,24 +108,11 @@
             <artifactId>slf4j-log4j12</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jboss.arquillian</groupId>
-            <artifactId>arquillian-junit</artifactId>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-container</artifactId>
             <version>${version.org.jboss.arquillian}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian</groupId>
-            <artifactId>arquillian-spi</artifactId>
-            <version>${version.org.jboss.arquillian}</version>
-            <scope>test</scope>
-        </dependency>
-        <!--
-                <dependency>
-                    <groupId>org.jboss.naming</groupId>
-                    <artifactId>jnpserver</artifactId>
-                    <version>5.0.3.GA</version>
-                </dependency>
-        -->
         <dependency>
             <groupId>javax.resource</groupId>
             <artifactId>connector-api</artifactId>
@@ -148,6 +127,41 @@
             <artifactId>sap-jco</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>jboss-public-repository</id>
+            <name>JBoss Repository</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public</url>
+            <!-- These optional flags are designed to speed up your builds by
+        reducing remote server calls -->
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>jboss-deprecated-repository</id>
+            <name>JBoss Deprecated Maven Repository</name>
+            <url>https://repository.jboss.org/nexus/content/repositories/deprecated/</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
 
 </project>

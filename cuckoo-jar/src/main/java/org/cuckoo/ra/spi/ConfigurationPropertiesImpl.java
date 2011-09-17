@@ -44,10 +44,6 @@ public class ConfigurationPropertiesImpl implements ConfigurationProperties
     private String jcoSncMyName;
     private String jcoSncLibrary;
     private String jcoPeakLimit;
-    private String jcoPoolCapacity;
-    private String jcoExpirationTime;
-    private String jcoExpirationCheckPeriod;
-    private String jcoMaxGetClientTime;
     private String jcoRepositoryDestination;
     private String jcoRepositoryUser;
     private String jcoRepositoryPassword;
@@ -66,16 +62,12 @@ public class ConfigurationPropertiesImpl implements ConfigurationProperties
         jcoClient = properties.getJcoClient();
         jcoCodepage = properties.getJcoCodepage();
         jcoCpicTrace = properties.getJcoCpicTrace();
-        jcoExpirationCheckPeriod = properties.getJcoExpirationCheckPeriod();
-        jcoExpirationTime = properties.getJcoExpirationTime();
         jcoGroup = properties.getJcoGroup();
         jcoLanguage = properties.getJcoLanguage();
-        jcoMaxGetClientTime = properties.getJcoMaxGetClientTime();
         jcoMessageServerHost = properties.getJcoMessageServerHost();
         jcoMessageServerPort = properties.getJcoMessageServerPort();
         jcoPassword = properties.getJcoPassword();
         jcoPeakLimit = properties.getJcoPeakLimit();
-        jcoPoolCapacity = properties.getJcoPoolCapacity();
         jcoR3Name = properties.getJcoR3Name();
         jcoRepositoryDestination = properties.getJcoRepositoryDestination();
         jcoRepositoryPassword = properties.getJcoRepositoryPassword();
@@ -328,46 +320,6 @@ public class ConfigurationPropertiesImpl implements ConfigurationProperties
         this.jcoPeakLimit = jcoPeakLimit;
     }
 
-    public String getJcoPoolCapacity()
-    {
-        return jcoPoolCapacity;
-    }
-
-    public void setJcoPoolCapacity( String jcoPoolCapacity )
-    {
-        this.jcoPoolCapacity = jcoPoolCapacity;
-    }
-
-    public String getJcoExpirationTime()
-    {
-        return jcoExpirationTime;
-    }
-
-    public void setJcoExpirationTime( String jcoExpirationTime )
-    {
-        this.jcoExpirationTime = jcoExpirationTime;
-    }
-
-    public String getJcoExpirationCheckPeriod()
-    {
-        return jcoExpirationCheckPeriod;
-    }
-
-    public void setJcoExpirationCheckPeriod( String jcoExpirationCheckPeriod )
-    {
-        this.jcoExpirationCheckPeriod = jcoExpirationCheckPeriod;
-    }
-
-    public String getJcoMaxGetClientTime()
-    {
-        return jcoMaxGetClientTime;
-    }
-
-    public void setJcoMaxGetClientTime( String jcoMaxGetClientTime )
-    {
-        this.jcoMaxGetClientTime = jcoMaxGetClientTime;
-    }
-
     public String getJcoRepositoryDestination()
     {
         return jcoRepositoryDestination;
@@ -434,10 +386,6 @@ public class ConfigurationPropertiesImpl implements ConfigurationProperties
         result = 31 * result + ( jcoSncMyName != null ? jcoSncMyName.hashCode() : 0 );
         result = 31 * result + ( jcoSncLibrary != null ? jcoSncLibrary.hashCode() : 0 );
         result = 31 * result + ( jcoPeakLimit != null ? jcoPeakLimit.hashCode() : 0 );
-        result = 31 * result + ( jcoPoolCapacity != null ? jcoPoolCapacity.hashCode() : 0 );
-        result = 31 * result + ( jcoExpirationTime != null ? jcoExpirationTime.hashCode() : 0 );
-        result = 31 * result + ( jcoExpirationCheckPeriod != null ? jcoExpirationCheckPeriod.hashCode() : 0 );
-        result = 31 * result + ( jcoMaxGetClientTime != null ? jcoMaxGetClientTime.hashCode() : 0 );
         result = 31 * result + ( jcoRepositoryDestination != null ? jcoRepositoryDestination.hashCode() : 0 );
         result = 31 * result + ( jcoRepositoryUser != null ? jcoRepositoryUser.hashCode() : 0 );
         result = 31 * result + ( jcoRepositoryPassword != null ? jcoRepositoryPassword.hashCode() : 0 );
@@ -552,26 +500,7 @@ public class ConfigurationPropertiesImpl implements ConfigurationProperties
         {
             return false;
         }
-        if ( jcoExpirationCheckPeriod != null ? !jcoExpirationCheckPeriod.equals( that.jcoExpirationCheckPeriod ) :
-             that.jcoExpirationCheckPeriod != null )
-        {
-            return false;
-        }
-        if ( jcoExpirationTime != null ? !jcoExpirationTime.equals( that.jcoExpirationTime ) :
-             that.jcoExpirationTime != null )
-        {
-            return false;
-        }
-        if ( jcoMaxGetClientTime != null ? !jcoMaxGetClientTime.equals( that.jcoMaxGetClientTime ) :
-             that.jcoMaxGetClientTime != null )
-        {
-            return false;
-        }
         if ( jcoPeakLimit != null ? !jcoPeakLimit.equals( that.jcoPeakLimit ) : that.jcoPeakLimit != null )
-        {
-            return false;
-        }
-        if ( jcoPoolCapacity != null ? !jcoPoolCapacity.equals( that.jcoPoolCapacity ) : that.jcoPoolCapacity != null )
         {
             return false;
         }

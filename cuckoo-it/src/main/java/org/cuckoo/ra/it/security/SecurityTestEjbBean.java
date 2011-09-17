@@ -22,12 +22,9 @@ package org.cuckoo.ra.it.security;
 import com.sap.conn.jco.monitor.JCoConnectionData;
 import com.sap.conn.jco.monitor.JCoConnectionMonitor;
 import org.cuckoo.ra.cci.CuckooMappedRecord;
-import org.jboss.ejb3.annotation.SecurityDomain;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.cuckoo.ra.common.ApplicationProperties;
 
 import javax.annotation.Resource;
-import javax.ejb.EJBContext;
 import javax.ejb.Stateless;
 import javax.resource.ResourceException;
 import javax.resource.cci.Connection;
@@ -38,29 +35,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Stateless
-@SecurityDomain( "ejb-test" )
 public class SecurityTestEjbBean implements SecurityTestEjb
 {
-    private static final Logger LOG = LoggerFactory.getLogger( SecurityTestEjbBean.class );
-
     private static final String RA_JNDI_NAME = "java:eis/sap/A12";
 
     @Resource( mappedName = RA_JNDI_NAME )
     private ConnectionFactory cf;
 
-    @Resource
-    private EJBContext ctx;
-
     public String callFunctionAndReturnEisUser() throws ResourceException
     {
-        LOG.info( "Caller principal: " + ctx.getCallerPrincipal() );
-
-//        ApplicationProperties applicationProperties = new ApplicationProperties( "SAPUSER2", "password" );
-
         final Connection connection = cf.getConnection();
+        return callSapFunction( connection );
+    }
+
+    public String callFunctionWithCustomPropertiesAndReturnEisUser( ApplicationProperties properties )
+            throws ResourceException
+    {
+        final Connection connection = cf.getConnection( properties );
+        return callSapFunction( connection );
+    }
+
+    private String callSapFunction( Connection connection ) throws ResourceException
+    {
         try
         {
-            callSapFunction( connection );
+            executeSapFunction( connection );
             return getConnectionUserFromJCoMonitor();
         }
         finally
@@ -69,7 +68,7 @@ public class SecurityTestEjbBean implements SecurityTestEjb
         }
     }
 
-    private void callSapFunction( Connection connection )
+    private void executeSapFunction( Connection connection )
     {
         try
         {
@@ -93,8 +92,8 @@ public class SecurityTestEjbBean implements SecurityTestEjb
     }
 
     /**
-     * This method is implemented a bit too complicated: Just to be sure it checks whether there
-     * really is only one call of RFC_PING function.
+     * This method might be implemented a bit too complicated: Just to be sure, it checks whether there
+     * is really only one call of RFC_PING function in the ConnectionData.
      *
      * @return The SAP user that was used to call the ABAP function.
      */

@@ -16,10 +16,11 @@
  * You should have received a copy of the GNU Lesser General Public License along
  * with Cuckoo Resource Adapter for SAP. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.cuckoo.ra.it;
+package org.cuckoo.ra.it.util;
 
 import org.cuckoo.ra.cci.CuckooConnection;
 import org.cuckoo.ra.common.ConnectionMetaDataImpl;
+import org.cuckoo.ra.it.security.ContainerManagedSecurityTest;
 import org.cuckoo.ra.jco.CuckooDestinationDataProvider;
 import org.cuckoo.ra.spi.CuckooResourceAdapter;
 import org.cuckoo.ra.util.ForwardingList;
@@ -30,9 +31,9 @@ import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchive;
 
 public class ArquillianHelper
 {
-    static final String DEPLOYMENT_NAME = "CuckooTestRA";
+    private static final String DEPLOYMENT_NAME = "CuckooTestRA";
 
-    static EnterpriseArchive createEar( JavaArchive testJar )
+    public static EnterpriseArchive createEar( JavaArchive testJar, final String datasourceName )
     {
         JavaArchive jar = ShrinkWrap.create( JavaArchive.class, DEPLOYMENT_NAME + ".jar" );
         jar.addPackages( false, CuckooResourceAdapter.class.getPackage(), CuckooConnection.class.getPackage(),
@@ -41,15 +42,15 @@ public class ArquillianHelper
 
         ResourceAdapterArchive rar =
                 ShrinkWrap.create( ResourceAdapterArchive.class, DEPLOYMENT_NAME + ".rar" );
-        rar.addLibrary( jar );
-        rar.addManifestResource( SecurityTest.class.getResource( "/META-INF/ra.xml" ), "ra.xml" );
+        rar.addAsLibrary( jar );
+        rar.addAsManifestResource( ContainerManagedSecurityTest.class.getResource( "/META-INF/ra.xml" ), "ra.xml" );
 
         // must be test.ear, otherwise Arquillian does not guess the correct JNDI-name for the EJBs
         EnterpriseArchive ear = ShrinkWrap.create( EnterpriseArchive.class, "test.ear" );
-        ear.addModule( "jboss5/cuckoo-secure-jboss-ds.xml", "cuckoo-jboss-ds.xml" );
-        ear.addApplicationResource( "jboss5/jboss-app.xml", "jboss-app.xml" );
-        ear.addModule( rar );
-        ear.addModule( testJar );
+        ear.addAsModule( datasourceName, "cuckoo-jboss-ds.xml" );
+        ear.addAsApplicationResource( "jboss5/jboss-app.xml", "jboss-app.xml" );
+        ear.addAsModule( rar );
+        ear.addAsModule( testJar );
 
         return ear;
     }

@@ -30,162 +30,142 @@ public class ConfigurationPropertiesHolder implements ConfigurationProperties
 
     ConfigurationPropertiesImpl getConfigurationProperties()
     {
-        return new ConfigurationPropertiesImpl(properties);
+        return new ConfigurationPropertiesImpl( properties );
     }
 
-    public void setDestinationName(String destinationName)
+    public void setDestinationName( String destinationName )
     {
-        properties.setDestinationName(destinationName);
+        properties.setDestinationName( destinationName );
     }
 
-    public void setJcoClient(String jcoClient)
+    public void setJcoClient( String jcoClient )
     {
-        properties.setJcoClient(jcoClient);
+        properties.setJcoClient( jcoClient );
     }
 
-    public void setJcoUser(String jcoUser)
+    public void setJcoUser( String jcoUser )
     {
-        properties.setJcoUser(jcoUser);
+        properties.setJcoUser( jcoUser );
     }
 
-    public void setJcoAliasUser(String jcoAliasUser)
+    public void setJcoAliasUser( String jcoAliasUser )
     {
-        properties.setJcoAliasUser(jcoAliasUser);
+        properties.setJcoAliasUser( jcoAliasUser );
     }
 
-    public void setJcoPassword(String jcoPassword)
+    public void setJcoPassword( String jcoPassword )
     {
-        properties.setJcoPassword(jcoPassword);
+        properties.setJcoPassword( jcoPassword );
     }
 
-    public void setJcoLanguage(String jcoLanguage)
+    public void setJcoLanguage( String jcoLanguage )
     {
-        properties.setJcoLanguage(jcoLanguage);
+        properties.setJcoLanguage( jcoLanguage );
     }
 
-    public void setJcoSapRouter(String jcoSapRouter)
+    public void setJcoSapRouter( String jcoSapRouter )
     {
-        properties.setJcoSapRouter(jcoSapRouter);
+        properties.setJcoSapRouter( jcoSapRouter );
     }
 
-    public void setJcoSystemNumber(String jcoSystemNumber)
+    public void setJcoSystemNumber( String jcoSystemNumber )
     {
-        properties.setJcoSystemNumber(jcoSystemNumber);
+        properties.setJcoSystemNumber( jcoSystemNumber );
     }
 
-    public void setJcoApplicationServerHost(String jcoApplicationServerHost)
+    public void setJcoApplicationServerHost( String jcoApplicationServerHost )
     {
-        properties.setJcoApplicationServerHost(jcoApplicationServerHost);
+        properties.setJcoApplicationServerHost( jcoApplicationServerHost );
     }
 
-    public void setJcoMessageServerHost(String jcoMessageServerHost)
+    public void setJcoMessageServerHost( String jcoMessageServerHost )
     {
-        properties.setJcoMessageServerHost(jcoMessageServerHost);
+        properties.setJcoMessageServerHost( jcoMessageServerHost );
     }
 
-    public void setJcoMessageServerPort(String jcoMessageServerPort)
+    public void setJcoMessageServerPort( String jcoMessageServerPort )
     {
-        properties.setJcoMessageServerPort(jcoMessageServerPort);
+        properties.setJcoMessageServerPort( jcoMessageServerPort );
     }
 
-    public void setJcoR3Name(String jcoR3Name)
+    public void setJcoR3Name( String jcoR3Name )
     {
-        properties.setJcoR3Name(jcoR3Name);
+        properties.setJcoR3Name( jcoR3Name );
     }
 
-    public void setJcoGroup(String jcoGroup)
+    public void setJcoGroup( String jcoGroup )
     {
-        properties.setJcoGroup(jcoGroup);
+        properties.setJcoGroup( jcoGroup );
     }
 
-    public void setJcoTrace(String jcoTrace)
+    public void setJcoTrace( String jcoTrace )
     {
-        properties.setJcoTrace(jcoTrace);
+        properties.setJcoTrace( jcoTrace );
     }
 
-    public void setJcoCpicTrace(String jcoCpicTrace)
+    public void setJcoCpicTrace( String jcoCpicTrace )
     {
-        properties.setJcoCpicTrace(jcoCpicTrace);
+        properties.setJcoCpicTrace( jcoCpicTrace );
     }
 
-    public void setJcoUseSapgui(String jcoUseSapgui)
+    public void setJcoUseSapgui( String jcoUseSapgui )
     {
-        properties.setJcoUseSapgui(jcoUseSapgui);
+        properties.setJcoUseSapgui( jcoUseSapgui );
     }
 
-    public void setJcoCodepage(String jcoCodepage)
+    public void setJcoCodepage( String jcoCodepage )
     {
-        properties.setJcoCodepage(jcoCodepage);
+        properties.setJcoCodepage( jcoCodepage );
     }
 
-    public void setJcoSncMode(String jcoSncMode)
+    public void setJcoSncMode( String jcoSncMode )
     {
-        properties.setJcoSncMode(jcoSncMode);
+        properties.setJcoSncMode( jcoSncMode );
     }
 
-    public void setJcoSncPartnername(String jcoSncPartnername)
+    public void setJcoSncPartnername( String jcoSncPartnername )
     {
-        properties.setJcoSncPartnername(jcoSncPartnername);
+        properties.setJcoSncPartnername( jcoSncPartnername );
     }
 
-    public void setJcoSncQop(String jcoSncQop)
+    public void setJcoSncQop( String jcoSncQop )
     {
-        properties.setJcoSncQop(jcoSncQop);
+        properties.setJcoSncQop( jcoSncQop );
     }
 
-    public void setJcoSncMyName(String jcoSncMyName)
+    public void setJcoSncMyName( String jcoSncMyName )
     {
-        properties.setJcoSncMyName(jcoSncMyName);
+        properties.setJcoSncMyName( jcoSncMyName );
     }
 
-    public void setJcoSncLibrary(String jcoSncLibrary)
+    public void setJcoSncLibrary( String jcoSncLibrary )
     {
-        properties.setJcoSncLibrary(jcoSncLibrary);
+        properties.setJcoSncLibrary( jcoSncLibrary );
     }
 
-    public void setJcoPeakLimit(String jcoPeakLimit)
+    public void setJcoPeakLimit( String jcoPeakLimit )
     {
-        properties.setJcoPeakLimit(jcoPeakLimit);
+        properties.setJcoPeakLimit( jcoPeakLimit );
     }
 
-    public void setJcoPoolCapacity(String jcoPoolCapacity)
+    public void setJcoRepositoryDestination( String jcoRepositoryDestination )
     {
-        properties.setJcoPoolCapacity(jcoPoolCapacity);
+        properties.setJcoRepositoryDestination( jcoRepositoryDestination );
     }
 
-    public void setJcoExpirationTime(String jcoExpirationTime)
+    public void setJcoRepositoryUser( String jcoRepositoryUser )
     {
-        properties.setJcoExpirationTime(jcoExpirationTime);
+        properties.setJcoRepositoryUser( jcoRepositoryUser );
     }
 
-    public void setJcoExpirationCheckPeriod(String jcoExpirationCheckPeriod)
+    public void setJcoRepositoryPassword( String jcoRepositoryPassword )
     {
-        properties.setJcoExpirationCheckPeriod(jcoExpirationCheckPeriod);
+        properties.setJcoRepositoryPassword( jcoRepositoryPassword );
     }
 
-    public void setJcoMaxGetClientTime(String jcoMaxGetClientTime)
+    public void setJcoRepositorySncMode( String jcoRepositorySncMode )
     {
-        properties.setJcoMaxGetClientTime(jcoMaxGetClientTime);
-    }
-
-    public void setJcoRepositoryDestination(String jcoRepositoryDestination)
-    {
-        properties.setJcoRepositoryDestination(jcoRepositoryDestination);
-    }
-
-    public void setJcoRepositoryUser(String jcoRepositoryUser)
-    {
-        properties.setJcoRepositoryUser(jcoRepositoryUser);
-    }
-
-    public void setJcoRepositoryPassword(String jcoRepositoryPassword)
-    {
-        properties.setJcoRepositoryPassword(jcoRepositoryPassword);
-    }
-
-    public void setJcoRepositorySncMode(String jcoRepositorySncMode)
-    {
-        properties.setJcoRepositorySncMode(jcoRepositorySncMode);
+        properties.setJcoRepositorySncMode( jcoRepositorySncMode );
     }
 
     public String getDestinationName()
@@ -301,26 +281,6 @@ public class ConfigurationPropertiesHolder implements ConfigurationProperties
     public String getJcoPeakLimit()
     {
         return properties.getJcoPeakLimit();
-    }
-
-    public String getJcoPoolCapacity()
-    {
-        return properties.getJcoPoolCapacity();
-    }
-
-    public String getJcoExpirationTime()
-    {
-        return properties.getJcoExpirationTime();
-    }
-
-    public String getJcoExpirationCheckPeriod()
-    {
-        return properties.getJcoExpirationCheckPeriod();
-    }
-
-    public String getJcoMaxGetClientTime()
-    {
-        return properties.getJcoMaxGetClientTime();
     }
 
     public String getJcoRepositoryDestination()

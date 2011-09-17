@@ -23,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.resource.cci.MappedRecord;
-import java.util.HashMap;
 
 public class CuckooMappedRecord extends ForwardingMap implements MappedRecord
 {
@@ -33,9 +32,8 @@ public class CuckooMappedRecord extends ForwardingMap implements MappedRecord
     private String recordShortDescription;
 
     @SuppressWarnings( "unchecked" )
-    public CuckooMappedRecord(String recordName)
+    public CuckooMappedRecord( String recordName )
     {
-        super(new HashMap<String, Object>());
         LOG.trace( "CuckooMappedRecord.CuckooMappedRecord()" );
         this.recordName = recordName;
     }
@@ -45,12 +43,12 @@ public class CuckooMappedRecord extends ForwardingMap implements MappedRecord
         return recordName;
     }
 
-    public void setRecordName(String recordName)
+    public void setRecordName( String recordName )
     {
         this.recordName = recordName;
     }
 
-    public void setRecordShortDescription(String recordShortDescription)
+    public void setRecordShortDescription( String recordShortDescription )
     {
         this.recordShortDescription = recordShortDescription;
     }
@@ -61,11 +59,13 @@ public class CuckooMappedRecord extends ForwardingMap implements MappedRecord
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException
+    public CuckooMappedRecord clone() throws CloneNotSupportedException
     {
-        CuckooMappedRecord clone = (CuckooMappedRecord) super.clone();
-        clone.setRecordName(recordName);
-        clone.setRecordShortDescription(recordShortDescription);
+        LOG.debug( "CuckooMappedRecord.clone()" );
+
+        CuckooMappedRecord clone = ( CuckooMappedRecord ) super.clone();
+        clone.setRecordName( recordName );
+        clone.setRecordShortDescription( recordShortDescription );
         return clone;
     }
 }

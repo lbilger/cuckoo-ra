@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 import javax.resource.ResourceException;
 import javax.resource.cci.MappedRecord;
 import javax.resource.cci.Record;
-import javax.resource.spi.*;
+import javax.resource.spi.LocalTransactionException;
 import java.util.HashMap;
 
 public class JCoAdapter
@@ -128,7 +128,7 @@ public class JCoAdapter
 
     public MappedRecord executeFunction( String functionName, Record inputRecord ) throws ResourceException
     {
-        LOG.trace( "JCoAdapter.executeFunction( " + functionName + ", " + inputRecord + " )" );
+        LOG.info( "JCoAdapter.executeFunction( " + functionName + ", " + inputRecord + " )" );
 
         try
         {
@@ -244,11 +244,14 @@ public class JCoAdapter
             commitFunction.getImportParameterList().setValue( "WAIT", "X" );
             commitFunction.execute( destination );
             assertNoErrorOccurredDuringCommit( commitFunction );
-            endStatefulSession();
         }
         catch ( JCoException e )
         {
             throw new LocalTransactionException( "Error committing transaction in SAP", e );
+        }
+        finally
+        {
+            endStatefulSession();
         }
     }
 
@@ -276,18 +279,27 @@ public class JCoAdapter
             // No need to check the RETURN values here. From SAP documentation:
             // "No messages are returned, if an error occurs. If the ROLLBACK WORK command is not successfully executed, 
             // the system crashes." :-)
-            endStatefulSession();
         }
         catch ( JCoException e )
         {
             throw new LocalTransactionException( "Error committing transaction in SAP", e );
+        }
+        finally
+        {
+            endStatefulSession();
         }
     }
 
     private void endStatefulSession()
             throws LocalTransactionException
     {
-        LOG.debug( "Ending stateful SAP session for destination " + destination.getDestinationName() );
+        LOG.info( "Ending stateful SAP session for destination " + destination.getDestinationName() );
+
+        if ( !JCoContext.isStateful( destination ) )
+        {
+            throw new LocalTransactionException( "Current JCo session is not stateful" );
+        }
+
         try
         {
             JCoContext.end( destination );

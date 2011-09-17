@@ -19,6 +19,12 @@
 
 package org.cuckoo.ra.it.transaction;
 
+import com.sap.conn.jco.JCoDestinationManager;
+import com.sap.conn.jco.JCoException;
+import com.sap.conn.jco.monitor.JCoDestinationMonitor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -31,9 +37,10 @@ import javax.resource.cci.LocalTransaction;
 import javax.resource.cci.MappedRecord;
 
 @Stateless
-public class TransactionTestEjbBean implements TransactionTestEjb
+public class TransactionTestEjbBean implements TransactionTestEjb, TransactionTestEjbRemote
 {
     private static final String RA_JNDI_NAME = "java:eis/sap/A12";
+    private static final Logger LOG = LoggerFactory.getLogger( TransactionTestEjbBean.class );
 
     @Resource( mappedName = RA_JNDI_NAME )
     private ConnectionFactory cf;
@@ -82,6 +89,8 @@ public class TransactionTestEjbBean implements TransactionTestEjb
     @TransactionAttribute( TransactionAttributeType.REQUIRED )
     public MappedRecord callFunctionWithContainerManagedTransaction( MappedRecord input ) throws ResourceException
     {
+        LOG.info( "############## ejb=" + this );
+
         Connection connection = null;
         try
         {
@@ -98,6 +107,24 @@ public class TransactionTestEjbBean implements TransactionTestEjb
             {
                 connection.close();
             }
+            monitorJCoConnections();
+        }
+    }
+
+    private void monitorJCoConnections()
+    {
+        try
+        {
+            JCoDestinationMonitor monitor = JCoDestinationManager.getDestination( "A12" ).getMonitor();
+            StringBuilder sb = new StringBuilder( "JCoDestinationMonitor[" );
+            sb.append( "peakLimit=" ).append( monitor.getPeakLimit() ).append( ';' );
+            sb.append( "maxUsedCount=" ).append( monitor.getMaxUsedCount() ).append( ';' );
+            sb.append( "usedConnectionCount=" ).append( monitor.getUsedConnectionCount() ).append( ']' );
+            LOG.info( sb.toString() );
+        }
+        catch ( JCoException e )
+        {
+            e.printStackTrace();
         }
     }
 
@@ -122,6 +149,34 @@ public class TransactionTestEjbBean implements TransactionTestEjb
             {
                 connection.close();
             }
+        }
+    }
+
+    @TransactionAttribute( TransactionAttributeType.NEVER )
+    public MappedRecord callFunctionWithLocalTransactionAndThrowRuntimeException( MappedRecord input )
+            throws ResourceException
+    {
+        final Connection connection = cf.getConnection();
+        LocalTransaction transaction = null;
+        try
+        {
+            transaction = connection.getLocalTransaction();
+            transaction.begin();
+            final MappedRecord output = callSapFunction( connection, input );
+            callSapFunction( null, null );
+            return output;
+        }
+        catch ( Exception e )
+        {
+            if ( transaction != null )
+            {
+                transaction.rollback();
+            }
+            throw new RuntimeException( "Exception occurred", e );
+        }
+        finally
+        {
+            connection.close();
         }
     }
 
