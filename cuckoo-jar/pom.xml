@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.cuckoo-ra</groupId>
         <artifactId>cuckoo-parent</artifactId>
-        <version>1.0.0.Beta01</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
