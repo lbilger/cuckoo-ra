@@ -38,6 +38,7 @@ import java.io.PrintWriter;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * CuckooManagedConnectionFactory
@@ -55,9 +56,18 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
 
     private boolean initialized = false;
 
+    private final UUID id = createId();
+
+    private UUID createId()
+    {
+        final UUID uuid = UUID.randomUUID();
+        LOG.trace( "CuckooManagedConnectionFactory.createId(), ID=" + uuid );
+        return uuid;
+    }
+
     public CuckooManagedConnectionFactory()
     {
-        LOG.trace( "CuckooManagedConnectionFactory()" );
+        LOG.trace( toString() );
     }
 
     /**
@@ -142,6 +152,8 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
                 {
                     LOG.trace( "ManagedConnectionFactory of PC=" + pc.getManagedConnectionFactory() );
                     LOG.trace( "ManagedConnectionFactory of ME=" + this );
+                    LOG.trace( "same()=" + ( this == pc.getManagedConnectionFactory() ) );
+                    LOG.trace( "equals()=" + this.equals( pc.getManagedConnectionFactory() ) );
 
                     if ( this.equals( pc.getManagedConnectionFactory() ) )
                     {
@@ -332,16 +344,22 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
 
         CuckooManagedConnectionFactory that = ( CuckooManagedConnectionFactory ) o;
 
-        return !( getConfigurationProperties() != null ?
-                  !getConfigurationProperties().equals( that.getConfigurationProperties() ) :
-                  that.getConfigurationProperties() != null );
+        return !( id != null ? !id.equals( that.id ) : that.id != null );
     }
 
     @Override
     public int hashCode()
     {
         int result = super.hashCode();
-        result = 31 * result + ( getConfigurationProperties() != null ? getConfigurationProperties().hashCode() : 0 );
+        result = 31 * result + ( id != null ? id.hashCode() : 0 );
         return result;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "CuckooManagedConnectionFactory{" +
+                "id=" + id +
+                "} " + super.toString();
     }
 }
