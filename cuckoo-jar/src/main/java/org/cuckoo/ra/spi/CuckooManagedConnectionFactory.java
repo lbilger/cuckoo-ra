@@ -40,11 +40,6 @@ import java.security.PrivilegedAction;
 import java.util.Set;
 import java.util.UUID;
 
-/**
- * CuckooManagedConnectionFactory
- *
- * @version $Revision: $
- */
 public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolder
         implements ManagedConnectionFactory, ResourceAdapterAssociation
 {
@@ -270,6 +265,7 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
     {
         LOG.trace( "CuckooManagedConnectionFactory.setLogWriter(PrintWriter)" );
         logwriter = out;
+        logwriter.println( "     ########## LogWriter ###############" );
     }
 
     /**

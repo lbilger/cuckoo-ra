@@ -126,10 +126,11 @@ public final class CuckooResourceAdapter implements ResourceAdapter
 
         if ( destinationDataProvider.wasAdded( destinationName ) )
         {
-            throw new ResourceException(
-                    "A JCo destination with destinationName '" + destinationName + "' was already registered. "
-                            +
-                            "Please provide a different destinationName with each resource adapter configuration you deploy." );
+            // TODO when upgrading the ra to JCA 1.6, lifecycle methods should be used to remove a JCo destination
+            // when a MCF config is undeployed. There is no way to get noticed about this before 1.6.
+            LOG.warn( "A JCo destination with destinationName '" + destinationName + "' was already registered. " +
+                    "This should only happen when redeploying the ManagedConnectionFactory configuration.");
+            destinationDataProvider.removeDestination( destinationName );
         }
 
         destinationDataProvider.addDestination( destinationName, properties );

@@ -52,7 +52,15 @@ public class CuckooDestinationDataProvider implements DestinationDataProvider
             LOG.warn( "The destination '" + destinationName + "' was already registered, it will be overwritten." );
         }
         propertiesForDestinationName.put( destinationName, properties );
-        eventListener.updated( destinationName );
+
+        if ( eventListener != null )
+        {
+            eventListener.updated( destinationName );
+        }
+        else
+        {
+            LOG.warn( "The eventListener is null!" );
+        }
     }
 
     // TODO shall be called on undeployment of ManagedConnectionFactory: how do we get informed about this?
@@ -61,10 +69,18 @@ public class CuckooDestinationDataProvider implements DestinationDataProvider
         LOG.debug( "CuckooDestinationDataProvider.removeDestination( " + destinationName + " )" );
 
         propertiesForDestinationName.remove( destinationName );
-        eventListener.deleted( destinationName );
+
+        if ( eventListener != null )
+        {
+            eventListener.deleted( destinationName );
+        }
+        else
+        {
+            LOG.warn( "The eventListener is null!" );
+        }
     }
 
-    public void removeAllDestinations( )
+    public void removeAllDestinations()
     {
         LOG.info( "CuckooDestinationDataProvider.removeAllDestinations( )" );
 
