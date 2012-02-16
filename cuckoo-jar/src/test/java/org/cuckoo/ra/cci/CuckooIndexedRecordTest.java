@@ -21,12 +21,7 @@ package org.cuckoo.ra.cci;
 import org.junit.Test;
 
 import static org.cuckoo.ra.util.CuckooTestUtil.serializeAndReturnDeserializedObject;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.Matchers.sameInstance;
-import static org.junit.Assert.assertThat;
+import static org.fest.assertions.Assertions.assertThat;
 
 @SuppressWarnings( {"unchecked"} )
 public class CuckooIndexedRecordTest
@@ -43,21 +38,21 @@ public class CuckooIndexedRecordTest
 
         CuckooIndexedRecord deserializedRecord = serializeAndReturnDeserializedObject( record );
 
-        assertThat( deserializedRecord, is( not( sameInstance( record ) ) ) );
+        assertThat( deserializedRecord ).isNotSameAs( record );
 
-        assertThat( deserializedRecord.getRecordName(), equalTo( "recordName" ) );
-        assertThat( deserializedRecord.getRecordShortDescription(), equalTo( "recordShortDescription" ) );
+        assertThat( deserializedRecord.getRecordName() ).isEqualTo( "recordName" );
+        assertThat( deserializedRecord.getRecordShortDescription() ).isEqualTo( "recordShortDescription" );
 
-        assertThat( deserializedRecord.size(), is( 2 ) );
+        assertThat( deserializedRecord ).hasSize( 2 );
 
-        assertThat( ( String ) deserializedRecord.get( 0 ), equalTo( "aString" ) );
+        assertThat( ( String ) deserializedRecord.get( 0 ) ).isEqualTo( "aString" );
         CuckooIndexedRecord deserializedInnerRecord = ( CuckooIndexedRecord ) deserializedRecord.get( 1 );
 
-        assertThat( deserializedInnerRecord, is( not( sameInstance( innerRecord ) ) ) );
-        assertThat( deserializedInnerRecord.size(), is( 1 ) );
-        assertThat( deserializedInnerRecord.getRecordName(), equalTo( "innerRecordName" ) );
-        assertThat( deserializedInnerRecord.getRecordShortDescription(), is( nullValue() ) );
-        assertThat( ( String ) deserializedInnerRecord.get( 0 ), equalTo( "anotherString" ) );
+        assertThat( deserializedInnerRecord ).isNotSameAs( innerRecord );
+        assertThat( deserializedInnerRecord ).hasSize( 1 );
+        assertThat( deserializedInnerRecord.getRecordName() ).isEqualTo( "innerRecordName" );
+        assertThat( deserializedInnerRecord.getRecordShortDescription() ).isNull();
+        assertThat( ( String ) deserializedInnerRecord.get( 0 ) ).isEqualTo( "anotherString" );
     }
 
     @Test
@@ -72,17 +67,17 @@ public class CuckooIndexedRecordTest
 
         CuckooIndexedRecord clone = record.clone();
 
-        assertThat( clone, is( not( sameInstance( record ) ) ) );
+        assertThat( clone ).isNotSameAs( record );
 
-        assertThat( clone.getRecordName(), equalTo( "recordName" ) );
-        assertThat( clone.getRecordShortDescription(), equalTo( "recordShortDescription" ) );
-        assertThat( clone.size(), is( 2 ) );
-        assertThat( ( String ) clone.get( 0 ), equalTo( "aString" ) );
+        assertThat( clone.getRecordName() ).isEqualTo( "recordName" );
+        assertThat( clone.getRecordShortDescription() ).isEqualTo( "recordShortDescription" );
+        assertThat( clone ).hasSize( 2 );
+        assertThat( ( String ) clone.get( 0 ) ).isEqualTo( "aString" );
 
         CuckooIndexedRecord innerRecordClone = ( CuckooIndexedRecord ) clone.get( 1 );
-        assertThat( innerRecordClone.size(), is( 1 ) );
-        assertThat( innerRecordClone.getRecordName(), equalTo( "innerRecordName" ) );
-        assertThat( innerRecordClone.getRecordShortDescription(), is( nullValue() ) );
-        assertThat( ( String ) innerRecordClone.get( 0 ), equalTo( "anotherString" ) );
+        assertThat( innerRecordClone ).hasSize( 1 );
+        assertThat( innerRecordClone.getRecordName() ).isEqualTo( "innerRecordName" );
+        assertThat( innerRecordClone.getRecordShortDescription() ).isNull();
+        assertThat( ( String ) innerRecordClone.get( 0 ) ).isEqualTo( "anotherString" );
     }
 }

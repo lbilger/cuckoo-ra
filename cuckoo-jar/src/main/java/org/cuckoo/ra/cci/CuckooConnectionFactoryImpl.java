@@ -18,7 +18,6 @@
  */
 package org.cuckoo.ra.cci;
 
-import org.cuckoo.ra.common.ApplicationProperties;
 import org.cuckoo.ra.spi.CuckooManagedConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,14 +25,13 @@ import org.slf4j.LoggerFactory;
 import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.resource.ResourceException;
-import javax.resource.cci.ConnectionFactory;
 import javax.resource.cci.ConnectionSpec;
 import javax.resource.spi.ConnectionManager;
 
 
-public class CuckooConnectionFactory implements ConnectionFactory
+public class CuckooConnectionFactoryImpl implements CuckooConnectionFactory
 {
-    private static final Logger LOG = LoggerFactory.getLogger( CuckooConnectionFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger( CuckooConnectionFactoryImpl.class );
 
     private Reference reference;
     private ConnectionManager connectionManager;
@@ -43,9 +41,10 @@ public class CuckooConnectionFactory implements ConnectionFactory
      * @param connectionManager        ConnectionManager
      * @param managedConnectionFactory The ManagedConnectionFactory instance.
      */
-    public CuckooConnectionFactory(ConnectionManager connectionManager, CuckooManagedConnectionFactory managedConnectionFactory)
+    public CuckooConnectionFactoryImpl( ConnectionManager connectionManager,
+                                        CuckooManagedConnectionFactory managedConnectionFactory )
     {
-        LOG.trace("CuckooConnectionFactory.CuckooConnectionFactory( ConnectionManager )");
+        LOG.trace( "CuckooConnectionFactoryImpl.CuckooConnectionFactoryImpl( ConnectionManager )" );
         this.connectionManager = connectionManager;
         this.managedConnectionFactory = managedConnectionFactory;
     }
@@ -58,8 +57,8 @@ public class CuckooConnectionFactory implements ConnectionFactory
      */
     public CuckooConnection getConnection() throws ResourceException
     {
-        LOG.trace("CuckooConnectionFactory.getConnection()");
-        return ( CuckooConnection ) connectionManager.allocateConnection(managedConnectionFactory, null);
+        LOG.trace( "CuckooConnectionFactoryImpl.getConnection()" );
+        return ( CuckooConnection ) connectionManager.allocateConnection( managedConnectionFactory, null );
     }
 
     /**
@@ -69,20 +68,22 @@ public class CuckooConnectionFactory implements ConnectionFactory
      * @return Connection instance the EIS instance.
      * @throws ResourceException Failed to get a connection to
      */
-    public CuckooConnection getConnection(ConnectionSpec connSpec) throws ResourceException
+    public CuckooConnection getConnection( ConnectionSpec connSpec ) throws ResourceException
     {
-        LOG.trace("CuckooConnectionFactory.getConnection( ConnectionSpec )");
-        if (connSpec == null)
+        LOG.trace( "CuckooConnectionFactoryImpl.getConnection( ConnectionSpec )" );
+        if ( connSpec == null )
         {
-            throw new IllegalArgumentException("The ConnectionSpec passed as an argument must not be null");
+            throw new IllegalArgumentException( "The ConnectionSpec passed as an argument must not be null" );
         }
-        if (!(connSpec instanceof ApplicationProperties))
+        if ( !( connSpec instanceof ApplicationPropertiesImpl ) )
         {
             throw new IllegalArgumentException(
-                    "The ConnectionSpec passed as an argument must be of type " + ApplicationProperties.class.getName());
+                    "The ConnectionSpec passed as an argument must be of type " +
+                            ApplicationPropertiesImpl.class.getName() );
         }
-        final ApplicationProperties specImpl = (ApplicationProperties) connSpec;
-        return ( CuckooConnection ) connectionManager.allocateConnection(managedConnectionFactory, new ApplicationProperties(specImpl));
+        final ApplicationPropertiesImpl specImpl = ( ApplicationPropertiesImpl ) connSpec;
+        return ( CuckooConnection ) connectionManager
+                .allocateConnection( managedConnectionFactory, new ApplicationPropertiesImpl( specImpl ) );
     }
 
     /**
@@ -93,7 +94,7 @@ public class CuckooConnectionFactory implements ConnectionFactory
      */
     public CuckooRaMetaData getMetaData() throws ResourceException
     {
-        LOG.trace("CuckooConnectionFactory.getMetaData()");
+        LOG.trace( "CuckooConnectionFactoryImpl.getMetaData()" );
         return managedConnectionFactory.getResourceAdapter().getResourceAdapterMetaData();
     }
 
@@ -107,7 +108,7 @@ public class CuckooConnectionFactory implements ConnectionFactory
      */
     public CuckooRecordFactory getRecordFactory() throws ResourceException
     {
-        LOG.trace("CuckooConnectionFactory.getRecordFactory()");
+        LOG.trace( "CuckooConnectionFactoryImpl.getRecordFactory()" );
         return managedConnectionFactory.getResourceAdapter().getRecordFactory();
     }
 
@@ -118,7 +119,7 @@ public class CuckooConnectionFactory implements ConnectionFactory
      */
     public Reference getReference() throws NamingException
     {
-        LOG.trace("CuckooConnectionFactory.getReference()");
+        LOG.trace( "CuckooConnectionFactoryImpl.getReference()" );
         return reference;
     }
 
@@ -127,10 +128,15 @@ public class CuckooConnectionFactory implements ConnectionFactory
      *
      * @param reference A Reference instance
      */
-    public void setReference(Reference reference)
+    public void setReference( Reference reference )
     {
-        LOG.trace("CuckooConnectionFactory.setReference( Reference )");
+        LOG.trace( "CuckooConnectionFactoryImpl.setReference( Reference )" );
 
         this.reference = reference;
+    }
+
+    public ApplicationProperties createApplicationProperties()
+    {
+        return new ApplicationPropertiesImpl();
     }
 }

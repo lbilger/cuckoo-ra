@@ -10,7 +10,7 @@
     <display-name>Cuckoo Resource Adapter for SAP</display-name>
     <vendor-name>akquinet tech@spree GmbH</vendor-name>
     <eis-type>SAP ECC</eis-type>
-    <resourceadapter-version>0.1</resourceadapter-version>
+    <resourceadapter-version>${project.version}</resourceadapter-version>
     <license>
         <description>GNU Lesser General Public License 3</description>
         <license-required>true</license-required>
@@ -186,7 +186,7 @@
                     <config-property-value/>
                 </config-property>
                 <connectionfactory-interface>javax.resource.cci.ConnectionFactory</connectionfactory-interface>
-                <connectionfactory-impl-class>org.cuckoo.ra.cci.CuckooConnectionFactory
+                <connectionfactory-impl-class>org.cuckoo.ra.cci.CuckooConnectionFactoryImpl
                 </connectionfactory-impl-class>
                 <connection-interface>javax.resource.cci.Connection</connection-interface>
                 <connection-impl-class>org.cuckoo.ra.cci.CuckooConnection</connection-impl-class>

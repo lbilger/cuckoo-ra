@@ -23,7 +23,7 @@ import javax.resource.cci.ConnectionMetaData;
 import javax.resource.spi.ManagedConnectionMetaData;
 
 
-public class ConnectionMetaDataImpl implements ManagedConnectionMetaData, ConnectionMetaData
+public class CuckooConnectionMetaData implements ManagedConnectionMetaData, ConnectionMetaData
 {
     private final String eisProductName;
     private final String eisProductVersion;
@@ -31,8 +31,8 @@ public class ConnectionMetaDataImpl implements ManagedConnectionMetaData, Connec
     private final String userName;
 
 
-    public ConnectionMetaDataImpl( String eisProductName, String eisProductVersion, int maxConnections,
-                                   String userName )
+    public CuckooConnectionMetaData( String eisProductName, String eisProductVersion, int maxConnections,
+                                     String userName )
     {
         this.eisProductName = eisProductName;
         this.eisProductVersion = eisProductVersion;

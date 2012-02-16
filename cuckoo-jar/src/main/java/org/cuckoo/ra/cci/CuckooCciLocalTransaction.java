@@ -40,27 +40,21 @@ public class CuckooCciLocalTransaction implements javax.resource.cci.LocalTransa
         this.connectionHandle = connectionHandle;
     }
 
-    public void begin()
+    public void begin() throws ResourceException
     {
         LOG.trace( "CuckooCciLocalTransaction.begin()" );
-
-        managedConnection.getLocalTransaction().begin();
-        managedConnection.notifyLocalTransactionStartedEvent( connectionHandle );
+        managedConnection.beginLocalTransaction( connectionHandle );
     }
 
     public void commit() throws ResourceException
     {
         LOG.trace( "CuckooCciLocalTransaction.commit()" );
-
-        managedConnection.getLocalTransaction().commit();
-        managedConnection.notifyLocalTransactionCommittedEvent( connectionHandle );
+        managedConnection.commitLocalTransaction( connectionHandle );
     }
 
     public void rollback() throws ResourceException
     {
         LOG.trace( "CuckooCciLocalTransaction.rollback()" );
-
-        managedConnection.getLocalTransaction().rollback();
-        managedConnection.notifyLocalTransactionRolledbackEvent( connectionHandle );
+        managedConnection.rollbackLocalTransaction( connectionHandle );
     }
 }

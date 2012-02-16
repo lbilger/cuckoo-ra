@@ -27,10 +27,10 @@ public class CuckooSpiLocalTransaction implements javax.resource.spi.LocalTransa
 {
     private static final Logger LOG = LoggerFactory.getLogger( CuckooSpiLocalTransaction.class );
 
-    private final CuckooManagedConnection managedConnection;
+    private final CuckooManagedConnectionImpl managedConnection;
 
 
-    public CuckooSpiLocalTransaction( CuckooManagedConnection managedConnection )
+    public CuckooSpiLocalTransaction( CuckooManagedConnectionImpl managedConnection )
     {
         this.managedConnection = managedConnection;
     }

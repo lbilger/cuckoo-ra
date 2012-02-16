@@ -18,8 +18,10 @@
  */
 package org.cuckoo.ra.spi;
 
+import org.cuckoo.ra.cci.ApplicationProperties;
+import org.cuckoo.ra.cci.ApplicationPropertiesImpl;
 import org.cuckoo.ra.cci.CuckooConnectionFactory;
-import org.cuckoo.ra.common.ApplicationProperties;
+import org.cuckoo.ra.cci.CuckooConnectionFactoryImpl;
 import org.cuckoo.ra.jco.JCoDestinationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,7 +90,7 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
             initialized = true;
         }
 
-        return new CuckooConnectionFactory( connectionManager, this );
+        return new CuckooConnectionFactoryImpl( connectionManager, this );
     }
 
     private void assertInitialized()
@@ -158,15 +160,17 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
                                     "Overwriting application defined configuration with user/password from Credentials" );
                             applicationProperties.setUser( pc.getUserName() );
                             applicationProperties.setPassword( String.valueOf( pc.getPassword() ) );
-                            return new CuckooManagedConnection( getConfigurationProperties(), applicationProperties );
+                            return new CuckooManagedConnectionImpl( getConfigurationProperties(),
+                                    applicationProperties );
                         }
                         else
                         {
                             LOG.debug(
                                     "No application-defined configuration info, using configured properties and user/password from Credentials" );
-                            applicationProperties = new ApplicationProperties( pc.getUserName(),
+                            applicationProperties = new ApplicationPropertiesImpl( pc.getUserName(),
                                     String.valueOf( pc.getPassword() ) );
-                            return new CuckooManagedConnection( getConfigurationProperties(), applicationProperties );
+                            return new CuckooManagedConnectionImpl( getConfigurationProperties(),
+                                    applicationProperties );
                         }
                     }
                 }
@@ -186,7 +190,7 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
         {
             LOG.debug( "Application managed sign-on. Using configuration provided by application" );
         }
-        return new CuckooManagedConnection( getConfigurationProperties(), applicationProperties );
+        return new CuckooManagedConnectionImpl( getConfigurationProperties(), applicationProperties );
     }
 
     /**
@@ -208,7 +212,7 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
 
         assertInitialized();
 
-        if ( cxRequestInfo != null && !( cxRequestInfo instanceof ApplicationProperties ) )
+        if ( cxRequestInfo != null && !( cxRequestInfo instanceof ApplicationPropertiesImpl ) )
         {
             LOG.warn( "ConnectionRequestInfo is not an instance of ApplicationProperties, but of " +
                     cxRequestInfo.getClass() );
@@ -219,7 +223,7 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
 
         for ( final Object object : connectionSet )
         {
-            final CuckooManagedConnection candidateConnection = ( CuckooManagedConnection ) object;
+            final CuckooManagedConnectionImpl candidateConnection = ( CuckooManagedConnectionImpl ) object;
 
             //noinspection ConstantConditions
             if ( applicationProperties == null )

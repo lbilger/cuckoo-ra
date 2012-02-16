@@ -18,7 +18,7 @@
  */
 package org.cuckoo.ra.cci;
 
-import org.cuckoo.ra.common.ConnectionMetaDataImpl;
+import org.cuckoo.ra.common.CuckooConnectionMetaData;
 import org.cuckoo.ra.spi.CuckooManagedConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +46,6 @@ public class CuckooConnection implements Connection
     public CuckooConnection( CuckooManagedConnection managedConnection )
     {
         LOG.trace( "CuckooConnection.CuckooConnection()" );
-
         this.managedConnection = managedConnection;
     }
 
@@ -94,7 +93,7 @@ public class CuckooConnection implements Connection
     {
         LOG.trace( "CuckooConnection.getLocalTransaction()" );
         checkIfValid();
-        return new CuckooCciLocalTransaction( managedConnection, this);
+        return new CuckooCciLocalTransaction( managedConnection, this );
     }
 
     /**
@@ -103,7 +102,7 @@ public class CuckooConnection implements Connection
      * @return ConnectionMetaData instance representing information about the EIS instance
      * @throws ResourceException Failed to get information about the connected EIS instance.
      */
-    public ConnectionMetaDataImpl getMetaData() throws ResourceException
+    public CuckooConnectionMetaData getMetaData() throws ResourceException
     {
         LOG.trace( "CuckooConnection.getMetaData()" );
         checkIfValid();

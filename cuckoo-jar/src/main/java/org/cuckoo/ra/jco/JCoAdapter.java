@@ -27,9 +27,9 @@ import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoParameterList;
 import com.sap.conn.jco.JCoStructure;
+import org.cuckoo.ra.cci.ApplicationProperties;
 import org.cuckoo.ra.cci.CuckooMappedRecord;
-import org.cuckoo.ra.common.ApplicationProperties;
-import org.cuckoo.ra.common.ConnectionMetaDataImpl;
+import org.cuckoo.ra.common.CuckooConnectionMetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -158,7 +158,7 @@ public class JCoAdapter
         }
     }
 
-    public ConnectionMetaDataImpl createConnectionMetaData() throws ResourceException
+    public CuckooConnectionMetaData createConnectionMetaData() throws ResourceException
     {
         LOG.trace( "JCoAdapter.createConnectionMetaData()" );
 
@@ -169,7 +169,7 @@ public class JCoAdapter
             String eisProductVersion = "" + attributes.getPartnerReleaseNumber();
             int maxConnections = destination.getPoolCapacity();
             String userName = attributes.getUser();
-            return new ConnectionMetaDataImpl( productName, eisProductVersion, maxConnections, userName );
+            return new CuckooConnectionMetaData( productName, eisProductVersion, maxConnections, userName );
         }
         catch ( JCoException e )
         {

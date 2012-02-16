@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 akquinet tech@spree GmbH
+ * Copyright (C) 2012 akquinet tech@spree GmbH
  *
  * This file is part of the Cuckoo Resource Adapter for SAP.
  *
@@ -16,19 +16,17 @@
  * You should have received a copy of the GNU Lesser General Public License along
  * with Cuckoo Resource Adapter for SAP. If not, see <http://www.gnu.org/licenses/>.
  */
+package org.cuckoo.ra;
 
-package org.cuckoo.ra.it.security;
-
-import org.cuckoo.ra.cci.ApplicationProperties;
-
-import javax.ejb.Local;
-import javax.resource.ResourceException;
-
-@Local
-public interface SecurityTestEjb
+public class CuckooException extends RuntimeException
 {
-    String callFunctionAndReturnEisUser() throws ResourceException;
+    public CuckooException( String message, Exception e )
+    {
+        super( message, e );
+    }
 
-    String callFunctionWithCustomPropertiesAndReturnEisUser( ApplicationProperties properties )
-            throws ResourceException;
+    public CuckooException( String message )
+    {
+        super( message );
+    }
 }

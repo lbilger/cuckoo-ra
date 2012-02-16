@@ -16,14 +16,13 @@
  * You should have received a copy of the GNU Lesser General Public License along
  * with Cuckoo Resource Adapter for SAP. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.cuckoo.ra.common;
+package org.cuckoo.ra.cci;
 
-import javax.resource.cci.ConnectionSpec;
 import javax.resource.spi.ConnectionRequestInfo;
 
 
-@SuppressWarnings( "unused")
-public final class ApplicationProperties implements ConnectionRequestInfo, ConnectionSpec
+@SuppressWarnings( "unused" )
+public final class ApplicationPropertiesImpl implements ConnectionRequestInfo, ApplicationProperties
 {
     private String user;
     private String aliasUser;
@@ -38,7 +37,7 @@ public final class ApplicationProperties implements ConnectionRequestInfo, Conne
      *
      * @param applicationProperties The ApplicationProperties that is used to create a copy.
      */
-    public ApplicationProperties(ApplicationProperties applicationProperties)
+    ApplicationPropertiesImpl( ApplicationPropertiesImpl applicationProperties )
     {
         this.user = applicationProperties.user;
         this.aliasUser = applicationProperties.aliasUser;
@@ -49,45 +48,56 @@ public final class ApplicationProperties implements ConnectionRequestInfo, Conne
         this.x509Certificate = applicationProperties.x509Certificate;
     }
 
-    public ApplicationProperties(String user, String password)
+    public ApplicationPropertiesImpl()
     {
-        this.user = user;
+    }
+
+    public ApplicationPropertiesImpl( String username, String password )
+    {
+        this.user = username;
         this.password = password;
     }
 
-    public void setUser(String user)
+    public ApplicationProperties setUser( String user )
     {
         this.user = user;
+        return this;
     }
 
-    public void setAliasUser(String aliasUser)
+    public ApplicationProperties setAliasUser( String aliasUser )
     {
         this.aliasUser = aliasUser;
+        return this;
     }
 
-    public void setPassword(String password)
+    public ApplicationProperties setPassword( String password )
     {
         this.password = password;
+        return this;
     }
 
-    public void setClient(String client)
+    public ApplicationProperties setClient( String client )
     {
         this.client = client;
+        return this;
     }
 
-    public void setLanguage(String language)
+    public ApplicationProperties setLanguage( String language )
     {
         this.language = language;
+        return this;
     }
 
-    public void setSsoTicket(String ssoTicket)
+    public ApplicationProperties setSsoTicket( String ssoTicket )
     {
         this.ssoTicket = ssoTicket;
+        return this;
     }
 
-    public void setX509Certificate(String x509Certificate)
+    public ApplicationProperties setX509Certificate( String x509Certificate )
     {
         this.x509Certificate = x509Certificate;
+        return this;
     }
 
     public String getUser()
@@ -127,44 +137,44 @@ public final class ApplicationProperties implements ConnectionRequestInfo, Conne
 
     @SuppressWarnings( {"RedundantIfStatement"} )
     @Override
-    public boolean equals(Object o)
+    public boolean equals( Object o )
     {
-        if (this == o)
+        if ( this == o )
         {
             return true;
         }
-        if (o == null || getClass() != o.getClass())
+        if ( o == null || getClass() != o.getClass() )
         {
             return false;
         }
 
-        ApplicationProperties that = (ApplicationProperties) o;
+        ApplicationPropertiesImpl that = ( ApplicationPropertiesImpl ) o;
 
-        if (aliasUser != null ? !aliasUser.equals(that.aliasUser) : that.aliasUser != null)
+        if ( aliasUser != null ? !aliasUser.equals( that.aliasUser ) : that.aliasUser != null )
         {
             return false;
         }
-        if (client != null ? !client.equals(that.client) : that.client != null)
+        if ( client != null ? !client.equals( that.client ) : that.client != null )
         {
             return false;
         }
-        if (language != null ? !language.equals(that.language) : that.language != null)
+        if ( language != null ? !language.equals( that.language ) : that.language != null )
         {
             return false;
         }
-        if (password != null ? !password.equals(that.password) : that.password != null)
+        if ( password != null ? !password.equals( that.password ) : that.password != null )
         {
             return false;
         }
-        if (ssoTicket != null ? !ssoTicket.equals(that.ssoTicket) : that.ssoTicket != null)
+        if ( ssoTicket != null ? !ssoTicket.equals( that.ssoTicket ) : that.ssoTicket != null )
         {
             return false;
         }
-        if (user != null ? !user.equals(that.user) : that.user != null)
+        if ( user != null ? !user.equals( that.user ) : that.user != null )
         {
             return false;
         }
-        if (x509Certificate != null ? !x509Certificate.equals(that.x509Certificate) : that.x509Certificate != null)
+        if ( x509Certificate != null ? !x509Certificate.equals( that.x509Certificate ) : that.x509Certificate != null )
         {
             return false;
         }
@@ -176,12 +186,26 @@ public final class ApplicationProperties implements ConnectionRequestInfo, Conne
     public int hashCode()
     {
         int result = user != null ? user.hashCode() : 0;
-        result = 31 * result + (aliasUser != null ? aliasUser.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (client != null ? client.hashCode() : 0);
-        result = 31 * result + (language != null ? language.hashCode() : 0);
-        result = 31 * result + (ssoTicket != null ? ssoTicket.hashCode() : 0);
-        result = 31 * result + (x509Certificate != null ? x509Certificate.hashCode() : 0);
+        result = 31 * result + ( aliasUser != null ? aliasUser.hashCode() : 0 );
+        result = 31 * result + ( password != null ? password.hashCode() : 0 );
+        result = 31 * result + ( client != null ? client.hashCode() : 0 );
+        result = 31 * result + ( language != null ? language.hashCode() : 0 );
+        result = 31 * result + ( ssoTicket != null ? ssoTicket.hashCode() : 0 );
+        result = 31 * result + ( x509Certificate != null ? x509Certificate.hashCode() : 0 );
         return result;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "ApplicationProperties{" +
+                "aliasUser='" + aliasUser + '\'' +
+                ", user='" + user + '\'' +
+                ", password='***'" +
+                ", client='" + client + '\'' +
+                ", language='" + language + '\'' +
+                ", ssoTicket='" + ssoTicket + '\'' +
+                ", x509Certificate='" + x509Certificate + '\'' +
+                '}';
     }
 }

@@ -18,21 +18,11 @@
  */
 package org.cuckoo.ra.cci;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.resource.cci.InteractionSpec;
 
-public class CuckooInteractionSpec implements InteractionSpec
+public class CuckooInteractionSpecImpl implements CuckooInteractionSpec
 {
-    private static final Logger LOG = LoggerFactory.getLogger( CuckooInteractionSpec.class );
-    
     private String functionName;
-
-    public CuckooInteractionSpec()
-    {
-        LOG.trace( "CuckooInteractionSpec.CuckooInteractionSpec()" );
-    }
 
     public String getFunctionName()
     {
@@ -40,7 +30,7 @@ public class CuckooInteractionSpec implements InteractionSpec
     }
 
     @SuppressWarnings( "unused" )
-    public void setFunctionName(String functionName)
+    public void setFunctionName( String functionName )
     {
         this.functionName = functionName;
     }

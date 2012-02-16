@@ -22,7 +22,7 @@ package org.cuckoo.ra.it.security;
 import com.sap.conn.jco.monitor.JCoConnectionData;
 import com.sap.conn.jco.monitor.JCoConnectionMonitor;
 import org.cuckoo.ra.cci.CuckooMappedRecord;
-import org.cuckoo.ra.common.ApplicationProperties;
+import org.cuckoo.ra.cci.ApplicationProperties;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;

@@ -18,6 +18,8 @@
  */
 package org.cuckoo.ra.spi;
 
+import org.cuckoo.ra.cci.CuckooConnection;
+
 import javax.resource.ResourceException;
 import javax.resource.spi.ConnectionManager;
 import javax.resource.spi.ConnectionRequestInfo;
@@ -39,7 +41,7 @@ public class CuckooConnectionManager implements ConnectionManager
     * @return Object The connection
     * @exception ResourceException Thrown if an error occurs
     */
-   public Object allocateConnection(ManagedConnectionFactory mcf,ConnectionRequestInfo cri) throws ResourceException
+   public CuckooConnection allocateConnection(ManagedConnectionFactory mcf,ConnectionRequestInfo cri) throws ResourceException
    {
       return null;
    }

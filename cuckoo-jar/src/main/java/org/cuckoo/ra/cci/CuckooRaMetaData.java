@@ -18,6 +18,7 @@
  */
 package org.cuckoo.ra.cci;
 
+import org.cuckoo.ra.util.RaXmlReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,11 +26,26 @@ import javax.resource.cci.ResourceAdapterMetaData;
 
 public class CuckooRaMetaData implements ResourceAdapterMetaData
 {
-    private static final Logger LOG = LoggerFactory.getLogger(CuckooRaMetaData.class);
+    private static final Logger LOG = LoggerFactory.getLogger( CuckooRaMetaData.class );
+
+    private static final String RA_XML_FILE = "/META-INF/ra.xml";
+
+    private final String adapterVersion;
+    private final String adapterVendorName;
+    private final String adapterName;
+    private final String adapterShortDescription;
+    private final String specVersion;
 
     public CuckooRaMetaData()
     {
-        LOG.trace("CuckooRaMetaData()");
+        LOG.trace( "CuckooRaMetaData()" );
+
+        RaXmlReader xmlReader = new RaXmlReader( RA_XML_FILE );
+        adapterVersion = xmlReader.getResourceAdapterVersion();
+        adapterVendorName = xmlReader.getVendorName();
+        adapterName = xmlReader.getDisplayName();
+        adapterShortDescription = xmlReader.getDescription();
+        specVersion = xmlReader.getSpecVersion();
     }
 
     /**
@@ -39,7 +55,7 @@ public class CuckooRaMetaData implements ResourceAdapterMetaData
      */
     public String getAdapterVersion()
     {
-        return "0.1"; // TODO get from ra.xml
+        return adapterVersion;
     }
 
     /**
@@ -49,7 +65,7 @@ public class CuckooRaMetaData implements ResourceAdapterMetaData
      */
     public String getAdapterVendorName()
     {
-        return "akquinet tech@spree GmbH"; // TODO get from ra.xml
+        return adapterVendorName;
     }
 
     /**
@@ -59,7 +75,7 @@ public class CuckooRaMetaData implements ResourceAdapterMetaData
      */
     public String getAdapterName()
     {
-        return "Cuckoo Resource Adapter for SAP"; // TODO get from ra.xml
+        return adapterName;
     }
 
     /**
@@ -69,7 +85,7 @@ public class CuckooRaMetaData implements ResourceAdapterMetaData
      */
     public String getAdapterShortDescription()
     {
-        return "Cuckoo RA"; // TODO get from ra.xml
+        return adapterShortDescription;
     }
 
     /**
@@ -79,7 +95,7 @@ public class CuckooRaMetaData implements ResourceAdapterMetaData
      */
     public String getSpecVersion()
     {
-        return "1.5"; // TODO get from ra.xml
+        return specVersion;
     }
 
     /**
@@ -121,6 +137,4 @@ public class CuckooRaMetaData implements ResourceAdapterMetaData
     {
         return true;
     }
-
-
 }
