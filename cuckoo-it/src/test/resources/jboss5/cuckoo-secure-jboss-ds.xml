@@ -8,7 +8,7 @@
 	<tx-connection-factory>
 		<!-- change the JNDI name of the connection, if required -->
 		<jndi-name>eis/sap/A12</jndi-name>
-		<rar-name>test.ear#CuckooTestRA.rar</rar-name>
+		<rar-name>CuckooTestRA.rar</rar-name>
 
 		<connection-definition>javax.resource.cci.ConnectionFactory</connection-definition>
 
@@ -24,5 +24,6 @@
 
 		<local-transaction />
 		<max-pool-size>5</max-pool-size>
+        <blocking-timeout-millis>5000</blocking-timeout-millis>
 	</tx-connection-factory>
 </connection-factories>

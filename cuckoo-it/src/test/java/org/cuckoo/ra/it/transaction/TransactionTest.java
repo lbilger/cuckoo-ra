@@ -53,18 +53,26 @@ public class TransactionTest
     @EJB
     private TransactionTestEjb ejb;
 
-    @Deployment
-    public static EnterpriseArchive createDeployment()
+//    @Deployment( order = 1, testable = false )
+//    public static Archive createRarDeployment()
+//    {
+//        return createRar();
+//    }
+
+    @Deployment //( name = "ear", order = 2 )
+    public static EnterpriseArchive createEarDeployment()
     {
         final JavaArchive testJar = ShrinkWrap.create( JavaArchive.class, "rartest.jar" )
                 .addClasses(
                         TransactionTestEjb.class, TransactionTestEjbRemote.class,
                         TransactionTestEjbBean.class, TransactionTest.class );
 
-        return createEar( testJar, "jboss5/cuckoo-jboss-ds.xml" );
+        return createEar( testJar, "/jboss5/cuckoo-jboss-ds.xml" );
     }
 
+
     @Test
+    //@OperateOnDeployment( "ear" )
     public void autoCommitsWhenCalledWithoutTransaction() throws ResourceException
     {
         // Changing phone number to new value...
@@ -88,6 +96,7 @@ public class TransactionTest
     }
 
     @Test
+    //@OperateOnDeployment( "ear" )
     public void commitsWhenCalledWithContainerManagedTransaction() throws ResourceException
     {
         // Changing phone number to new value...
@@ -111,6 +120,7 @@ public class TransactionTest
     }
 
     @Test
+    //@OperateOnDeployment( "ear" )
     public void rollsBackWhenCallWithContainerManagedTransactionAndAnErrorHappens() throws ResourceException
     {
         // Changing phone number to new value...
@@ -140,6 +150,7 @@ public class TransactionTest
     }
 
     @Test
+    //@OperateOnDeployment( "ear" )
     public void commitsWhenCalledWithLocalTransaction() throws ResourceException
     {
         // Changing phone number to new value...
@@ -163,6 +174,7 @@ public class TransactionTest
     }
 
     @Test
+    //@OperateOnDeployment( "ear" )
     public void rollsBackWhenCalledWithLocalTransactionAndErrorHappens() throws ResourceException
     {
         // Changing phone number to new value...

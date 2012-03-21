@@ -19,8 +19,7 @@
 package org.cuckoo.ra.it.util;
 
 import org.cuckoo.ra.cci.CuckooConnection;
-import org.cuckoo.ra.common.ConnectionMetaDataImpl;
-import org.cuckoo.ra.it.security.ContainerManagedSecurityTest;
+import org.cuckoo.ra.common.CuckooConnectionMetaData;
 import org.cuckoo.ra.jco.CuckooDestinationDataProvider;
 import org.cuckoo.ra.spi.CuckooResourceAdapter;
 import org.cuckoo.ra.util.ForwardingList;
@@ -35,23 +34,27 @@ public class ArquillianHelper
 
     public static EnterpriseArchive createEar( JavaArchive testJar, final String datasourceName )
     {
+        // must be test.ear, otherwise Arquillian does not guess the correct JNDI-name for the EJBs
+        EnterpriseArchive ear = ShrinkWrap.create( EnterpriseArchive.class, "test.ear" );
+//        ear.addAsModule( ArquillianHelper.class.getResource( datasourceName ), "cuckoo-jboss-ds.xml" );
+//        ear.addAsApplicationResource( "jboss5/jboss-app.xml", "jboss-app.xml" );
+        ear.addAsModule( testJar );
+        ear.addAsManifestResource( ArquillianHelper.class.getResource( "/META-INF/MyMANIFEST.MF" ), "MANIFEST.MF" );
+
+        return ear;
+    }
+
+    public static ResourceAdapterArchive createRar()
+    {
         JavaArchive jar = ShrinkWrap.create( JavaArchive.class, DEPLOYMENT_NAME + ".jar" );
         jar.addPackages( false, CuckooResourceAdapter.class.getPackage(), CuckooConnection.class.getPackage(),
                 ForwardingList.class.getPackage(), CuckooDestinationDataProvider.class.getPackage(),
-                ConnectionMetaDataImpl.class.getPackage() );
+                CuckooConnectionMetaData.class.getPackage() );
 
         ResourceAdapterArchive rar =
                 ShrinkWrap.create( ResourceAdapterArchive.class, DEPLOYMENT_NAME + ".rar" );
         rar.addAsLibrary( jar );
-        rar.addAsManifestResource( ContainerManagedSecurityTest.class.getResource( "/META-INF/ra.xml" ), "ra.xml" );
-
-        // must be test.ear, otherwise Arquillian does not guess the correct JNDI-name for the EJBs
-        EnterpriseArchive ear = ShrinkWrap.create( EnterpriseArchive.class, "test.ear" );
-        ear.addAsModule( datasourceName, "cuckoo-jboss-ds.xml" );
-        ear.addAsApplicationResource( "jboss5/jboss-app.xml", "jboss-app.xml" );
-        ear.addAsModule( rar );
-        ear.addAsModule( testJar );
-
-        return ear;
+        rar.addAsManifestResource( ArquillianHelper.class.getResource( "/META-INF/ra.xml" ), "ra.xml" );
+        return rar;
     }
 }

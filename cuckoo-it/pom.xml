@@ -78,7 +78,7 @@
                 <dependency>
                     <groupId>org.jboss.as</groupId>
                     <artifactId>jboss-as-arquillian-container-remote</artifactId>
-                    <version>7.1.0.Beta1</version>
+                    <version>7.1.0.Final</version>
                 </dependency>
             </dependencies>
             <build>
@@ -86,15 +86,16 @@
                     <plugin>
                         <groupId>org.jboss.as.plugins</groupId>
                         <artifactId>jboss-as-maven-plugin</artifactId>
-                        <version>7.1.0.Beta1</version>
+                        <version>7.1.0.Final</version>
                         <executions>
                             <execution>
                                 <id>deploy-rar</id>
-                                <phase>package</phase>
+                                <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>deploy-artifact</goal>
                                 </goals>
                                 <configuration>
+                                    <name>cuckoo.rar</name>
                                     <groupId>org.cuckoo-ra</groupId>
                                     <artifactId>cuckoo-rar</artifactId>
                                     <packaging>rar</packaging>
@@ -102,53 +103,92 @@
                             </execution>
                             <execution>
                                 <id>add-resource</id>
-                                <phase>install</phase>
+                                <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>add-resource</goal>
                                 </goals>
                                 <configuration>
-                                    <address>subsystem=resource-adapters,resource-adapter=java:jboss/eis/sap/B34
-                                    </address>
-                                    <properties>
-                                        <archive>cuckoo-ra-0.1.rar</archive>
-                                        <transaction-support>LocalTransaction</transaction-support>
-                                        <connection-definitions>!![("class-name" => "org.cuckoo.ra.spi.CuckooManagedConnectionFactory"),("enabled" => true),("jndi-name" => "java:jboss/eis/sap/B34"),("pool-name" => "eis/sap/B34"),("use-ccm" => true),("use-java-context" => true)]</connection-definitions>
-                                            <!--
-                                            <connection-definition
-                                                    class-name="org.cuckoo.ra.spi.CuckooManagedConnectionFactory"
-                                                    enabled="true"
-                                                    jndi-name="java:jboss/eis/sap/B34"
-                                                    pool-name="eis/sap/B34"
-                                                    use-ccm="true"
-                                                    use-java-context="true">
-                                                <config-property name="jcoUser">SAPUSER</config-property>
-                                                <config-property name="jcoApplicationServerHost">192.168.146.129
-                                                </config-property>
-                                                <config-property name="jcoPassword">password</config-property>
-                                                <config-property name="jcoSystemNumber">00</config-property>
-                                                <config-property name="destinationName">A12</config-property>
-                                                <config-property name="jcoPoolCapacity">1</config-property>
-                                                <config-property name="jcoClient">001</config-property>
-                                                <pool>
-                                                    <max-pool-size>5</max-pool-size>
-                                                    <prefill>false</prefill>
-                                                    <use-strict-min>false</use-strict-min>
-                                                    <flush-strategy>FailingConnectionOnly</flush-strategy>
-                                                </pool>
-                                                <security>
-                                                    <security-domain>ejb-test</security-domain>
-                                                </security>
-                                                <timeout>
-                                                    <blocking-timeout-millis>5000</blocking-timeout-millis>
-                                                </timeout>
-                                                <validation>
-                                                    <background-validation>false</background-validation>
-                                                    <use-fast-fail>false</use-fast-fail>
-                                                </validation>
-                                            </connection-definition>
-                                        </connection-definitions>
--->
-                                    </properties>
+                                    <address>subsystem=resource-adapters</address>
+                                    <resources>
+                                        <resource>
+                                            <address>
+                                                resource-adapter=cuckoo-ra
+                                            </address>
+                                            <properties>
+                                                <archive>cuckoo.rar</archive>
+                                                <transaction-support>LocalTransaction</transaction-support>
+                                            </properties>
+                                        </resource>
+                                        <resource>
+                                            <address>
+                                                resource-adapter=cuckoo-ra,connection-definitions=eis/sap/NSP
+                                            </address>
+                                            <properties>
+                                                <jndi-name>java:jboss/eis/sap/NSP</jndi-name>
+                                                <class-name>org.cuckoo.ra.spi.CuckooManagedConnectionFactory
+                                                </class-name>
+                                                <enabled>true</enabled>
+                                                <use-ccm>true</use-ccm>
+                                                <use-java-context>true</use-java-context>
+                                                <max-pool-size>17</max-pool-size>
+                                                <pool-prefill>false</pool-prefill>
+                                                <pool-use-strict-min>false</pool-use-strict-min>
+                                                <flush-strategy>FailingConnectionOnly</flush-strategy>
+                                                <security-domain>ejb-test</security-domain>
+                                                <blocking-timeout-wait-millis>5000</blocking-timeout-wait-millis>
+                                                <background-validation>false</background-validation>
+                                                <use-fast-fail>false</use-fast-fail>
+                                            </properties>
+                                        </resource>
+                                        <resource>
+                                            <address>
+                                                resource-adapter=cuckoo-ra,connection-definitions=eis/sap/NSP,config-properties=jcoUser
+                                            </address>
+                                            <properties>
+                                                <value>SAPUSER</value>
+                                            </properties>
+                                        </resource>
+                                        <resource>
+                                            <address>
+                                                resource-adapter=cuckoo-ra,connection-definitions=eis/sap/NSP,config-properties=jcoPassword
+                                            </address>
+                                            <properties>
+                                                <value>password</value>
+                                            </properties>
+                                        </resource>
+                                        <resource>
+                                            <address>
+                                                resource-adapter=cuckoo-ra,connection-definitions=eis/sap/NSP,config-properties=jcoApplicationServerHost
+                                            </address>
+                                            <properties>
+                                                <value>192.168.146.129</value>
+                                            </properties>
+                                        </resource>
+                                        <resource>
+                                            <address>
+                                                resource-adapter=cuckoo-ra,connection-definitions=eis/sap/NSP,config-properties=jcoSystemNumber
+                                            </address>
+                                            <properties>
+                                                <value>00</value>
+                                            </properties>
+                                        </resource>
+                                        <resource>
+                                            <address>
+                                                resource-adapter=cuckoo-ra,connection-definitions=eis/sap/NSP,config-properties=destinationName
+                                            </address>
+                                            <properties>
+                                                <value>A12</value>
+                                            </properties>
+                                        </resource>
+                                        <resource>
+                                            <address>
+                                                resource-adapter=cuckoo-ra,connection-definitions=eis/sap/NSP,config-properties=jcoClient
+                                            </address>
+                                            <properties>
+                                                <value>001</value>
+                                            </properties>
+                                        </resource>
+                                    </resources>
                                 </configuration>
                             </execution>
                         </executions>
@@ -173,6 +213,30 @@
         </profile>
     </profiles>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>org.cuckoo-ra</groupId>
@@ -182,7 +246,6 @@
             <groupId>org.cuckoo-ra</groupId>
             <artifactId>cuckoo-rar</artifactId>
             <type>rar</type>
-            <!--<scope>test</scope>-->
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -199,7 +262,7 @@
         <dependency>
             <groupId>org.jboss.arquillian.junit</groupId>
             <artifactId>arquillian-junit-container</artifactId>
-            <version>1.0.0.CR4</version>
+            <version>1.0.0.CR7</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -221,22 +284,16 @@
             <artifactId>commons-lang</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.jboss.as.plugins</groupId>
-            <artifactId>jboss-as-maven-plugin</artifactId>
-            <version>7.1.0.Beta1b</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
+<!--
     <repositories>
         <repository>
             <id>jboss-public-repository</id>
             <name>JBoss Repository</name>
             <url>http://repository.jboss.org/nexus/content/groups/public</url>
-            <!-- These optional flags are designed to speed up your builds by
-        reducing remote server calls -->
+            &lt;!&ndash; These optional flags are designed to speed up your builds by
+        reducing remote server calls &ndash;&gt;
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -259,5 +316,6 @@
             </snapshots>
         </repository>
     </repositories>
+-->
 
 </project>

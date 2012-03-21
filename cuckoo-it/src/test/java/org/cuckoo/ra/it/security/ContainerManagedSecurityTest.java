@@ -18,9 +18,12 @@
  */
 package org.cuckoo.ra.it.security;
 
-import org.cuckoo.ra.common.ApplicationProperties;
+import org.cuckoo.ra.cci.ApplicationProperties;
+import org.cuckoo.ra.cci.ApplicationPropertiesImpl;
 import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -42,6 +45,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import static org.cuckoo.ra.it.util.ArquillianHelper.createEar;
+import static org.cuckoo.ra.it.util.ArquillianHelper.createRar;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -53,7 +57,13 @@ public class ContainerManagedSecurityTest
     @EJB
     private SecurityTestEjb ejb;
 
-    @Deployment
+    @Deployment( order = 1, testable = false )
+    public static Archive createRarDeployment()
+    {
+        return createRar();
+    }
+
+    @Deployment( name = "ear", order = 2 )
     public static EnterpriseArchive createDeployment()
     {
         final JavaArchive testJar = ShrinkWrap.create( JavaArchive.class, "rartest.jar" )
@@ -65,10 +75,11 @@ public class ContainerManagedSecurityTest
                 ContainerManagedSecurityTest.class.getResource( "/jboss5/cuckoo-jboss-beans.xml" ),
                 "cuckoo-jboss-beans.xml" );
 
-        return createEar( testJar, "jboss5/cuckoo-secure-jboss-ds.xml" );
+        return createEar( testJar, "/jboss5/cuckoo-secure-jboss-ds.xml" );
     }
 
     @Test
+    @OperateOnDeployment( "ear" )
     public void callsSapWithCredentialsOfLoggedInUser() throws Exception
     {
         LoginContext loginContext = login( "SAPUSER2" );
@@ -79,6 +90,7 @@ public class ContainerManagedSecurityTest
     }
 
     @Test
+    @OperateOnDeployment( "ear" )
     public void throwsSecurityExceptionWhenCallingSapWithWrongCredentials() throws LoginException, ResourceException
     {
         LoginContext loginContext = login( "SAPUSER3" );
@@ -98,9 +110,10 @@ public class ContainerManagedSecurityTest
     }
 
     @Test
+    @OperateOnDeployment( "ear" )
     public void overwritesApplicationProvidedPropertiesWithSubjectProperties() throws Exception
     {
-        ApplicationProperties properties = new ApplicationProperties( "NON_EXISTING_USER", "A_PASSWORD" );
+        ApplicationProperties properties = new ApplicationPropertiesImpl( "NON_EXISTING_USER", "A_PASSWORD" );
         LoginContext loginContext = login( "SAPUSER2" );
         String username = ejb.callFunctionWithCustomPropertiesAndReturnEisUser( properties );
         loginContext.logout();

@@ -26,6 +26,7 @@ import org.cuckoo.ra.it.transaction.TransactionTestEjbRemote;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -39,6 +40,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.cuckoo.ra.it.util.ArquillianHelper.createEar;
+import static org.cuckoo.ra.it.util.ArquillianHelper.createRar;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -47,19 +49,28 @@ public class LoadTest
 {
     private static final String CUSTOMER_NUMBER = "00000001";
 
-    private static final int NUMBER_OF_CONCURRENT_CLIENTS = 200;
+    private static final int NUMBER_OF_CONCURRENT_CLIENTS = 60;
     private static final int TIME_TO_WAIT_BETWEEN_CALLS = 50;
 
     private Set<Throwable> errors = new HashSet<Throwable>();
 
-    @Deployment
+
+/*
+    @Deployment( order = 1, testable = false )
+    public static Archive createRarDeployment()
+    {
+        return createRar();
+    }
+*/
+
+    @Deployment(order = 2)
     public static EnterpriseArchive createDeployment()
     {
         final JavaArchive testJar = ShrinkWrap.create( JavaArchive.class, "rartest.jar" )
                 .addClasses( TransactionTestEjb.class, TransactionTestEjbRemote.class, TransactionTestEjbBean.class,
                         LoadTest.class );
 
-        return createEar( testJar, "jboss5/cuckoo-jboss-ds.xml" );
+        return createEar( testJar, "/jboss5/cuckoo-jboss-ds.xml" );
     }
 
     @Test
@@ -92,7 +103,7 @@ public class LoadTest
     {
         private SapClient( String name )
         {
-            super( name );
+            super( name );  
         }
 
         @Override

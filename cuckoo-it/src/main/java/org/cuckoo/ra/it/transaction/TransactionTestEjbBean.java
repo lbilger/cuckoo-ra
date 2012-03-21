@@ -39,7 +39,7 @@ import javax.resource.cci.MappedRecord;
 @Stateless
 public class TransactionTestEjbBean implements TransactionTestEjb, TransactionTestEjbRemote
 {
-    private static final String RA_JNDI_NAME = "java:eis/sap/A12";
+    private static final String RA_JNDI_NAME = "java:jboss/eis/sap/NSP";
     private static final Logger LOG = LoggerFactory.getLogger( TransactionTestEjbBean.class );
 
     @Resource( mappedName = RA_JNDI_NAME )

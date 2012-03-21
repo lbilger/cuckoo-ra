@@ -8,7 +8,7 @@
         <!-- change the JNDI name of the connection, if required -->
         <jndi-name>eis/sap/A12</jndi-name>
         <local-transaction/>
-        <rar-name>test.ear#CuckooTestRA.rar</rar-name>
+        <rar-name>CuckooTestRA.rar</rar-name>
 
         <connection-definition>javax.resource.cci.ConnectionFactory</connection-definition>
 
@@ -22,8 +22,8 @@
         <config-property name="jcoPeakLimit" type="java.lang.String">40</config-property>
         <config-property name="jcoMaxGetClientTime" type="java.lang.String">5000</config-property>
 
-        <max-pool-size>29</max-pool-size>
-        <blocking-timeout-millis>5000</blocking-timeout-millis>
+        <max-pool-size>10</max-pool-size>
+        <blocking-timeout-millis>20000</blocking-timeout-millis>
         <idle-timeout-minutes>1</idle-timeout-minutes>
     </tx-connection-factory>
 </connection-factories>
