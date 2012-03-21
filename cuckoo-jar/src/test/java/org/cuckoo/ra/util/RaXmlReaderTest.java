@@ -21,6 +21,8 @@ package org.cuckoo.ra.util;
 import org.cuckoo.ra.CuckooException;
 import org.junit.Test;
 
+import java.util.TreeSet;
+
 import static org.fest.assertions.Assertions.assertThat;
 import static org.fest.assertions.Fail.fail;
 
@@ -88,6 +90,12 @@ public class RaXmlReaderTest
     @Test
     public void throwsExceptionWhenElementInRaXmlFileIsEmpty() throws Exception
     {
+        TreeSet<String> set = new TreeSet<String>();
+        for ( String key : System.getProperties().stringPropertyNames() )
+        {
+            set.add( key + "=" + System.getProperty( key ) );
+        }
+
         RaXmlReader reader = new RaXmlReader( "/META-INF/ra_broken.xml" );
         try
         {
