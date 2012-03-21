@@ -9,7 +9,7 @@
     <groupId>org.cuckoo-ra</groupId>
     <artifactId>cuckoo-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <modules>
         <module>cuckoo-rar</module>
@@ -120,18 +120,18 @@
             <dependency>
                 <groupId>org.cuckoo-ra</groupId>
                 <artifactId>cuckoo-api</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.cuckoo-ra</groupId>
                 <artifactId>cuckoo-jar</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.cuckoo-ra</groupId>
                 <artifactId>cuckoo-rar</artifactId>
                 <type>rar</type>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
