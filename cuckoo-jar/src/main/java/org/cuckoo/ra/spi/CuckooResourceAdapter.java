@@ -90,6 +90,7 @@ public final class CuckooResourceAdapter implements ResourceAdapter
     {
         LOG.info( "Starting " + resourceAdapterMetaData.getAdapterName() + " Version " +
                 resourceAdapterMetaData.getAdapterVersion() );
+        LOG.debug( "java.library.path=" + System.getProperty( "java.library.path" ) );
         Environment.registerDestinationDataProvider( destinationDataProvider );
     }
 
