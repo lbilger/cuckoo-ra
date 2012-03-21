@@ -37,6 +37,11 @@ public class CuckooConnectionFactoryImpl implements CuckooConnectionFactory
     private ConnectionManager connectionManager;
     private CuckooManagedConnectionFactory managedConnectionFactory;
 
+    public CuckooConnectionFactoryImpl()
+    {
+        // JCA 1.5 Spec, Section: 17.5.1.1: A ConnectionFactory must have a default constructor
+    }
+
     /**
      * @param connectionManager        ConnectionManager
      * @param managedConnectionFactory The ManagedConnectionFactory instance.
