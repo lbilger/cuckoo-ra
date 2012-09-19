@@ -221,29 +221,47 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
 
         ApplicationProperties applicationProperties = ( ApplicationProperties ) cxRequestInfo;
 
+        LOG.debug( "ConnectionRequestInfo=" + applicationProperties );
+
         for ( final Object object : connectionSet )
         {
             final CuckooManagedConnectionImpl candidateConnection = ( CuckooManagedConnectionImpl ) object;
+            ApplicationProperties candidateConnectionProperties = candidateConnection.getApplicationProperties();
+
+            LOG.debug( "Candidate Connection=" + candidateConnectionProperties );
 
             //noinspection ConstantConditions
             if ( applicationProperties == null )
             {
-                if ( candidateConnection.getApplicationProperties() == null )
+                if ( candidateConnectionProperties == null )
                 {
                     LOG.debug( "Found matching connection (no application properties): " + candidateConnection );
+                    return candidateConnection;
+                }
+                else
+                {
+                    if ( hasUsernameAndPasswordAsConfigured( candidateConnectionProperties ) )
+                    LOG.debug( "Found matching connection (equal user and password): " + candidateConnection );
                     return candidateConnection;
                 }
             }
             else
             {
-                if ( applicationProperties.equals( candidateConnection.getApplicationProperties() ) )
+                if ( applicationProperties.equals( candidateConnectionProperties ) )
                 {
                     LOG.debug( "Found matching connection (equal application properties): " + candidateConnection );
                     return candidateConnection;
                 }
             }
         }
+        LOG.debug( "No matching connection found, returning null" );
         return null;
+    }
+
+    private boolean hasUsernameAndPasswordAsConfigured( ApplicationProperties candidateConnectionProperties )
+    {
+        return candidateConnectionProperties.getUser().equals( getConfigurationProperties().getUsername() ) &&
+                candidateConnectionProperties.getPassword().equals( getConfigurationProperties().getPassword() );
     }
 
 

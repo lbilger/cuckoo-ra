@@ -40,9 +40,9 @@ public class JCoDestinationUtil
 
         final Properties properties = new Properties();
         addPropertyNullSafe(properties, DestinationDataProvider.JCO_CLIENT, config.getJcoClient());
-        addPropertyNullSafe(properties, DestinationDataProvider.JCO_USER, config.getJcoUser());
+        addPropertyNullSafe(properties, DestinationDataProvider.JCO_USER, config.getUsername());
         addPropertyNullSafe(properties, DestinationDataProvider.JCO_ALIAS_USER, config.getJcoAliasUser());
-        addPropertyNullSafe(properties, DestinationDataProvider.JCO_PASSWD, config.getJcoPassword());
+        addPropertyNullSafe(properties, DestinationDataProvider.JCO_PASSWD, config.getPassword());
         addPropertyNullSafe(properties, DestinationDataProvider.JCO_LANG, config.getJcoLanguage());
         addPropertyNullSafe(properties, DestinationDataProvider.JCO_SAPROUTER, config.getJcoSapRouter());
         addPropertyNullSafe(properties, DestinationDataProvider.JCO_SYSNR, config.getJcoSystemNumber());
@@ -60,11 +60,14 @@ public class JCoDestinationUtil
         addPropertyNullSafe(properties, DestinationDataProvider.JCO_SNC_QOP, config.getJcoSncQop());
         addPropertyNullSafe(properties, DestinationDataProvider.JCO_SNC_MYNAME, config.getJcoSncMyName());
         addPropertyNullSafe(properties, DestinationDataProvider.JCO_SNC_LIBRARY, config.getJcoSncLibrary());
-        addPropertyNullSafe(properties, DestinationDataProvider.JCO_PEAK_LIMIT, config.getJcoPeakLimit());
         addPropertyNullSafe(properties, DestinationDataProvider.JCO_REPOSITORY_DEST, config.getJcoRepositoryDestination());
         addPropertyNullSafe(properties, DestinationDataProvider.JCO_REPOSITORY_USER, config.getJcoRepositoryUser());
         addPropertyNullSafe(properties, DestinationDataProvider.JCO_REPOSITORY_PASSWD, config.getJcoRepositoryPassword());
         addPropertyNullSafe(properties, DestinationDataProvider.JCO_REPOSITORY_SNC, config.getJcoRepositorySncMode());
+
+        // A pool_capacity value of 0 disables connection pooling
+        // The pool shall be maintained by the container, not by JCo
+        properties.setProperty( DestinationDataProvider.JCO_POOL_CAPACITY, "0");
         return properties;
     }
 

@@ -58,6 +58,17 @@ public final class ApplicationPropertiesImpl implements ConnectionRequestInfo, A
         this.password = password;
     }
 
+    public ApplicationPropertiesImpl( String user, String password, String language, String client, String aliasUser,
+                                      String ssoTicket, String x509Certificate )
+    {
+        this(user, password);
+        this.language = language;
+        this.client = client;
+        this.aliasUser = aliasUser;
+        this.ssoTicket = ssoTicket;
+        this.x509Certificate = x509Certificate;
+    }
+
     public ApplicationProperties setUser( String user )
     {
         this.user = user;

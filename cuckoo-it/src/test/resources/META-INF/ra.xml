@@ -155,12 +155,6 @@
                     <config-property-value/>
                 </config-property>
                 <config-property>
-                    <!-- jco.destination.peak_limit - Maximum number of active connections that can be created for a destination simultaneously -->
-                    <config-property-name>jcoPeakLimit</config-property-name>
-                    <config-property-type>java.lang.String</config-property-type>
-                    <config-property-value/>
-                </config-property>
-                <config-property>
                     <!-- jco.destination.repository_destination - Specifies which destination should be used as repository, i.e. use this destination's repository -->
                     <config-property-name>jcoRepositoryDestination</config-property-name>
                     <config-property-type>java.lang.String</config-property-type>

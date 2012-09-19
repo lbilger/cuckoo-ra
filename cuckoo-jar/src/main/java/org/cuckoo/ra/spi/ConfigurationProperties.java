@@ -30,11 +30,11 @@ public interface ConfigurationProperties
 
     void setJcoClient(String jcoClient);
 
-    void setJcoUser(String jcoUser);
+    void setUsername( String username );
 
     void setJcoAliasUser(String jcoAliasUser);
 
-    void setJcoPassword(String jcoPassword);
+    void setPassword( String password );
 
     void setJcoLanguage(String jcoLanguage);
 
@@ -70,8 +70,6 @@ public interface ConfigurationProperties
 
     void setJcoSncLibrary(String jcoSncLibrary);
 
-    void setJcoPeakLimit(String jcoPeakLimit);
-
     void setJcoRepositoryDestination(String jcoRepositoryDestination);
 
     void setJcoRepositoryUser(String jcoRepositoryUser);
@@ -84,11 +82,11 @@ public interface ConfigurationProperties
 
     String getJcoClient();
 
-    String getJcoUser();
+    String getUsername();
 
     String getJcoAliasUser();
 
-    String getJcoPassword();
+    String getPassword();
 
     String getJcoLanguage();
 
@@ -123,8 +121,6 @@ public interface ConfigurationProperties
     String getJcoSncMyName();
 
     String getJcoSncLibrary();
-
-    String getJcoPeakLimit();
 
     String getJcoRepositoryDestination();
 

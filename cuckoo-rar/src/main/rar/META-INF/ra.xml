@@ -37,7 +37,7 @@
                 </config-property>
                 <config-property>
                     <!-- jco.client.user - Logon user -->
-                    <config-property-name>jcoUser</config-property-name>
+                    <config-property-name>username</config-property-name>
                     <config-property-type>java.lang.String</config-property-type>
                     <config-property-value/>
                 </config-property>
@@ -49,7 +49,7 @@
                 </config-property>
                 <config-property>
                     <!-- jco.client.passwd - Logon password -->
-                    <config-property-name>jcoPassword</config-property-name>
+                    <config-property-name>password</config-property-name>
                     <config-property-type>java.lang.String</config-property-type>
                     <config-property-value/>
                 </config-property>
@@ -152,12 +152,6 @@
                 <config-property>     
                     <!-- jco.client.snc_lib - Path to library which provides SNC service -->
                     <config-property-name>jcoSncLibrary</config-property-name>
-                    <config-property-type>java.lang.String</config-property-type>
-                    <config-property-value/>
-                </config-property>
-                <config-property>
-                    <!-- jco.destination.peak_limit - Maximum number of active connections that can be created for a destination simultaneously -->
-                    <config-property-name>jcoPeakLimit</config-property-name>
                     <config-property-type>java.lang.String</config-property-type>
                     <config-property-value/>
                 </config-property>

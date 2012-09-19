@@ -43,9 +43,9 @@ public class ConfigurationPropertiesHolder implements ConfigurationProperties
         properties.setJcoClient( jcoClient );
     }
 
-    public void setJcoUser( String jcoUser )
+    public void setUsername( String username )
     {
-        properties.setJcoUser( jcoUser );
+        properties.setUsername( username );
     }
 
     public void setJcoAliasUser( String jcoAliasUser )
@@ -53,9 +53,9 @@ public class ConfigurationPropertiesHolder implements ConfigurationProperties
         properties.setJcoAliasUser( jcoAliasUser );
     }
 
-    public void setJcoPassword( String jcoPassword )
+    public void setPassword( String password )
     {
-        properties.setJcoPassword( jcoPassword );
+        properties.setPassword( password );
     }
 
     public void setJcoLanguage( String jcoLanguage )
@@ -143,11 +143,6 @@ public class ConfigurationPropertiesHolder implements ConfigurationProperties
         properties.setJcoSncLibrary( jcoSncLibrary );
     }
 
-    public void setJcoPeakLimit( String jcoPeakLimit )
-    {
-        properties.setJcoPeakLimit( jcoPeakLimit );
-    }
-
     public void setJcoRepositoryDestination( String jcoRepositoryDestination )
     {
         properties.setJcoRepositoryDestination( jcoRepositoryDestination );
@@ -178,9 +173,9 @@ public class ConfigurationPropertiesHolder implements ConfigurationProperties
         return properties.getJcoClient();
     }
 
-    public String getJcoUser()
+    public String getUsername()
     {
-        return properties.getJcoUser();
+        return properties.getUsername();
     }
 
     public String getJcoAliasUser()
@@ -188,9 +183,9 @@ public class ConfigurationPropertiesHolder implements ConfigurationProperties
         return properties.getJcoAliasUser();
     }
 
-    public String getJcoPassword()
+    public String getPassword()
     {
-        return properties.getJcoPassword();
+        return properties.getPassword();
     }
 
     public String getJcoLanguage()
@@ -276,11 +271,6 @@ public class ConfigurationPropertiesHolder implements ConfigurationProperties
     public String getJcoSncLibrary()
     {
         return properties.getJcoSncLibrary();
-    }
-
-    public String getJcoPeakLimit()
-    {
-        return properties.getJcoPeakLimit();
     }
 
     public String getJcoRepositoryDestination()

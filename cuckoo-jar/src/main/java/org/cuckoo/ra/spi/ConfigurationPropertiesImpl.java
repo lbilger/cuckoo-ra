@@ -23,9 +23,9 @@ public class ConfigurationPropertiesImpl implements ConfigurationProperties
 {
     private String destinationName;
     private String jcoClient;
-    private String jcoUser;
+    private String username;
     private String jcoAliasUser;
-    private String jcoPassword;
+    private String password;
     private String jcoLanguage;
     private String jcoSapRouter;
     private String jcoSystemNumber;
@@ -43,7 +43,6 @@ public class ConfigurationPropertiesImpl implements ConfigurationProperties
     private String jcoSncQop;
     private String jcoSncMyName;
     private String jcoSncLibrary;
-    private String jcoPeakLimit;
     private String jcoRepositoryDestination;
     private String jcoRepositoryUser;
     private String jcoRepositoryPassword;
@@ -66,8 +65,7 @@ public class ConfigurationPropertiesImpl implements ConfigurationProperties
         jcoLanguage = properties.getJcoLanguage();
         jcoMessageServerHost = properties.getJcoMessageServerHost();
         jcoMessageServerPort = properties.getJcoMessageServerPort();
-        jcoPassword = properties.getJcoPassword();
-        jcoPeakLimit = properties.getJcoPeakLimit();
+        password = properties.getPassword();
         jcoR3Name = properties.getJcoR3Name();
         jcoRepositoryDestination = properties.getJcoRepositoryDestination();
         jcoRepositoryPassword = properties.getJcoRepositoryPassword();
@@ -81,7 +79,7 @@ public class ConfigurationPropertiesImpl implements ConfigurationProperties
         jcoSncQop = properties.getJcoSncQop();
         jcoSystemNumber = properties.getJcoSystemNumber();
         jcoTrace = properties.getJcoTrace();
-        jcoUser = properties.getJcoUser();
+        username = properties.getUsername();
         jcoUseSapgui = properties.getJcoUseSapgui();
     }
 
@@ -110,14 +108,14 @@ public class ConfigurationPropertiesImpl implements ConfigurationProperties
         this.jcoClient = jcoClient;
     }
 
-    public String getJcoUser()
+    public String getUsername()
     {
-        return jcoUser;
+        return username;
     }
 
-    public void setJcoUser( String jcoUser )
+    public void setUsername( String username )
     {
-        this.jcoUser = jcoUser;
+        this.username = username;
     }
 
     public String getJcoAliasUser()
@@ -130,14 +128,14 @@ public class ConfigurationPropertiesImpl implements ConfigurationProperties
         this.jcoAliasUser = jcoAliasUser;
     }
 
-    public String getJcoPassword()
+    public String getPassword()
     {
-        return jcoPassword;
+        return password;
     }
 
-    public void setJcoPassword( String jcoPassword )
+    public void setPassword( String password )
     {
-        this.jcoPassword = jcoPassword;
+        this.password = password;
     }
 
     public String getJcoLanguage()
@@ -310,16 +308,6 @@ public class ConfigurationPropertiesImpl implements ConfigurationProperties
         this.jcoSncLibrary = jcoSncLibrary;
     }
 
-    public String getJcoPeakLimit()
-    {
-        return jcoPeakLimit;
-    }
-
-    public void setJcoPeakLimit( String jcoPeakLimit )
-    {
-        this.jcoPeakLimit = jcoPeakLimit;
-    }
-
     public String getJcoRepositoryDestination()
     {
         return jcoRepositoryDestination;
@@ -365,9 +353,9 @@ public class ConfigurationPropertiesImpl implements ConfigurationProperties
     {
         int result = jcoClient != null ? jcoClient.hashCode() : 0;
         result = 31 * result + ( destinationName != null ? destinationName.hashCode() : 0 );
-        result = 31 * result + ( jcoUser != null ? jcoUser.hashCode() : 0 );
+        result = 31 * result + ( username != null ? username.hashCode() : 0 );
         result = 31 * result + ( jcoAliasUser != null ? jcoAliasUser.hashCode() : 0 );
-        result = 31 * result + ( jcoPassword != null ? jcoPassword.hashCode() : 0 );
+        result = 31 * result + ( password != null ? password.hashCode() : 0 );
         result = 31 * result + ( jcoLanguage != null ? jcoLanguage.hashCode() : 0 );
         result = 31 * result + ( jcoSapRouter != null ? jcoSapRouter.hashCode() : 0 );
         result = 31 * result + ( jcoSystemNumber != null ? jcoSystemNumber.hashCode() : 0 );
@@ -385,7 +373,6 @@ public class ConfigurationPropertiesImpl implements ConfigurationProperties
         result = 31 * result + ( jcoSncQop != null ? jcoSncQop.hashCode() : 0 );
         result = 31 * result + ( jcoSncMyName != null ? jcoSncMyName.hashCode() : 0 );
         result = 31 * result + ( jcoSncLibrary != null ? jcoSncLibrary.hashCode() : 0 );
-        result = 31 * result + ( jcoPeakLimit != null ? jcoPeakLimit.hashCode() : 0 );
         result = 31 * result + ( jcoRepositoryDestination != null ? jcoRepositoryDestination.hashCode() : 0 );
         result = 31 * result + ( jcoRepositoryUser != null ? jcoRepositoryUser.hashCode() : 0 );
         result = 31 * result + ( jcoRepositoryPassword != null ? jcoRepositoryPassword.hashCode() : 0 );
@@ -451,7 +438,7 @@ public class ConfigurationPropertiesImpl implements ConfigurationProperties
         {
             return false;
         }
-        if ( jcoPassword != null ? !jcoPassword.equals( that.jcoPassword ) : that.jcoPassword != null )
+        if ( password != null ? !password.equals( that.password ) : that.password != null )
         {
             return false;
         }
@@ -496,11 +483,7 @@ public class ConfigurationPropertiesImpl implements ConfigurationProperties
         {
             return false;
         }
-        if ( jcoUser != null ? !jcoUser.equals( that.jcoUser ) : that.jcoUser != null )
-        {
-            return false;
-        }
-        if ( jcoPeakLimit != null ? !jcoPeakLimit.equals( that.jcoPeakLimit ) : that.jcoPeakLimit != null )
+        if ( username != null ? !username.equals( that.username ) : that.username != null )
         {
             return false;
         }
