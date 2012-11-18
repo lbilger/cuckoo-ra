@@ -116,7 +116,7 @@ public class RaXmlReader
             XPathExpression xPathExpression = xPath.compile( xpath );
             String value = ( String ) xPathExpression.evaluate( xmlDocument, XPathConstants.STRING );
 
-            if ( value == null || value.isEmpty() )
+            if ( value == null || value.length() == 0 )
             {
                 throw new CuckooException( "Element '" + xpath + "' in ra.xml is empty or missing" );
             }
