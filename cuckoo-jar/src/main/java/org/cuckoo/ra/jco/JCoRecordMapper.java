@@ -27,18 +27,18 @@ import com.sap.conn.jco.JCoStructure;
 import com.sap.conn.jco.JCoTable;
 import org.cuckoo.ra.cci.CuckooIndexedRecord;
 import org.cuckoo.ra.cci.CuckooMappedRecord;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.resource.ResourceException;
 import javax.resource.cci.IndexedRecord;
 import javax.resource.cci.MappedRecord;
 import javax.resource.cci.Record;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class JCoRecordMapper
 {
-    private static final Logger LOG = LoggerFactory.getLogger( JCoRecordMapper.class );
+    private static final Logger LOG = Logger.getLogger( JCoRecordMapper.class.getName() );
 
     public void populateImportRecord( final JCoParameterList importList,
                                       final JCoParameterList tableList, final MappedRecord mapRecord )
@@ -106,7 +106,7 @@ public class JCoRecordMapper
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private void populateMappedRecord( final MappedRecord mappedResultRecord, final JCoRecord record )
     {
         for ( int i = 0; i < record.getFieldCount(); i++ )
@@ -213,7 +213,7 @@ public class JCoRecordMapper
 
             for ( final AbapException exc : exceptions )
             {
-                LOG.error( message, exc );
+                LOG.log( Level.SEVERE, message, exc );
             }
 
             throw new ResourceException( message, exceptions[0] );

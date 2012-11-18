@@ -19,14 +19,13 @@
 package org.cuckoo.ra.cci;
 
 import org.cuckoo.ra.util.ForwardingMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.resource.cci.MappedRecord;
+import java.util.logging.Logger;
 
 public class CuckooMappedRecord extends ForwardingMap implements MappedRecord
 {
-    private static final Logger LOG = LoggerFactory.getLogger( CuckooMappedRecord.class );
+    private static final Logger LOG = Logger.getLogger( CuckooMappedRecord.class.getName() );
 
     private String recordName;
     private String recordShortDescription;
@@ -34,7 +33,7 @@ public class CuckooMappedRecord extends ForwardingMap implements MappedRecord
     @SuppressWarnings( "unchecked" )
     public CuckooMappedRecord( String recordName )
     {
-        LOG.trace( "CuckooMappedRecord.CuckooMappedRecord()" );
+        LOG.entering( "CuckooMappedRecord", "CuckooMappedRecord()" );
         this.recordName = recordName;
     }
 
@@ -61,7 +60,7 @@ public class CuckooMappedRecord extends ForwardingMap implements MappedRecord
     @Override
     public CuckooMappedRecord clone() throws CloneNotSupportedException
     {
-        LOG.debug( "CuckooMappedRecord.clone()" );
+        LOG.finer( "CuckooMappedRecord.clone()" );
 
         CuckooMappedRecord clone = ( CuckooMappedRecord ) super.clone();
         clone.setRecordName( recordName );

@@ -18,14 +18,12 @@
  */
 package org.cuckoo.ra.spi;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.resource.ResourceException;
+import java.util.logging.Logger;
 
 public class CuckooSpiLocalTransaction implements javax.resource.spi.LocalTransaction
 {
-    private static final Logger LOG = LoggerFactory.getLogger( CuckooSpiLocalTransaction.class );
+    private static final Logger LOG = Logger.getLogger( CuckooSpiLocalTransaction.class.getName() );
 
     private final CuckooManagedConnectionImpl managedConnection;
 
@@ -37,19 +35,19 @@ public class CuckooSpiLocalTransaction implements javax.resource.spi.LocalTransa
 
     public void begin()
     {
-        LOG.trace( "Start transaction" );
+        LOG.finest( "Start transaction" );
         managedConnection.startTransaction();
     }
 
     public void commit() throws ResourceException
     {
-        LOG.trace( "Commit transaction" );
+        LOG.finest( "Commit transaction" );
         managedConnection.commitTransaction();
     }
 
     public void rollback() throws ResourceException
     {
-        LOG.trace( "Rollback transaction" );
+        LOG.finest( "Rollback transaction" );
         managedConnection.rollbackTransaction();
     }
 }

@@ -20,16 +20,16 @@ package org.cuckoo.ra.jco;
 
 import com.sap.conn.jco.ext.DestinationDataEventListener;
 import com.sap.conn.jco.ext.DestinationDataProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CuckooDestinationDataProvider implements DestinationDataProvider
 {
-    private static final Logger LOG = LoggerFactory.getLogger( CuckooDestinationDataProvider.class );
+    private static final Logger LOG = Logger.getLogger( CuckooDestinationDataProvider.class.getName() );
 
     private Map<String, Properties> propertiesForDestinationName = new HashMap<String, Properties>();
 
@@ -37,7 +37,7 @@ public class CuckooDestinationDataProvider implements DestinationDataProvider
 
     public void addDestination( String destinationName, Properties properties )
     {
-        LOG.trace( "CuckooDestinationDataProvider.addDestination( )" );
+        LOG.entering( "CuckooDestinationDataProvider", "addDestination()" );
 
         if ( destinationName == null || destinationName.length() == 0 )
         {
@@ -49,7 +49,7 @@ public class CuckooDestinationDataProvider implements DestinationDataProvider
         }
         if ( wasAdded( destinationName ) )
         {
-            LOG.warn( "The destination '" + destinationName + "' was already registered, it will be overwritten." );
+            LOG.warning( "The destination '" + destinationName + "' was already registered, it will be overwritten." );
         }
         propertiesForDestinationName.put( destinationName, properties );
 
@@ -59,14 +59,14 @@ public class CuckooDestinationDataProvider implements DestinationDataProvider
         }
         else
         {
-            LOG.warn( "The eventListener is null!" );
+            LOG.warning( "The eventListener is null!" );
         }
     }
 
     // TODO shall be called on undeployment of ManagedConnectionFactory: how do we get informed about this?
     public void removeDestination( String destinationName )
     {
-        LOG.debug( "CuckooDestinationDataProvider.removeDestination( " + destinationName + " )" );
+        LOG.finer( "CuckooDestinationDataProvider.removeDestination( " + destinationName + " )" );
 
         propertiesForDestinationName.remove( destinationName );
 
@@ -76,7 +76,7 @@ public class CuckooDestinationDataProvider implements DestinationDataProvider
         }
         else
         {
-            LOG.warn( "The eventListener is null!" );
+            LOG.warning( "The eventListener is null!" );
         }
     }
 
@@ -95,7 +95,7 @@ public class CuckooDestinationDataProvider implements DestinationDataProvider
      */
     public Properties getDestinationProperties( String destinationName )
     {
-        LOG.debug( "CuckooDestinationDataProvider.getDestinationProperties( " + destinationName + " )" );
+        LOG.finer( "CuckooDestinationDataProvider.getDestinationProperties( " + destinationName + " )" );
 
         if ( wasAdded( destinationName ) )
         {
@@ -117,7 +117,7 @@ public class CuckooDestinationDataProvider implements DestinationDataProvider
      */
     public void setDestinationDataEventListener( DestinationDataEventListener eventListener )
     {
-        LOG.debug( "CuckooDestinationDataProvider.setDestinationDataEventListener( " + eventListener + " )" );
+        LOG.finer( "CuckooDestinationDataProvider.setDestinationDataEventListener( " + eventListener + " )" );
         this.eventListener = eventListener;
     }
 
@@ -126,7 +126,7 @@ public class CuckooDestinationDataProvider implements DestinationDataProvider
      */
     public boolean supportsEvents()
     {
-        LOG.debug( "CuckooDestinationDataProvider.supportsEvents()" );
+        LOG.finer( "CuckooDestinationDataProvider.supportsEvents()" );
         return true;
     }
 }

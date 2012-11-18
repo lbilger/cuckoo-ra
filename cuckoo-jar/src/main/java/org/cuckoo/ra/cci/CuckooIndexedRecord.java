@@ -19,15 +19,14 @@
 package org.cuckoo.ra.cci;
 
 import org.cuckoo.ra.util.ForwardingList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.resource.cci.IndexedRecord;
 import java.io.Serializable;
+import java.util.logging.Logger;
 
 public class CuckooIndexedRecord extends ForwardingList implements IndexedRecord, Serializable
 {
-    private static final Logger LOG = LoggerFactory.getLogger( CuckooMappedRecord.class );
+    private static final Logger LOG = Logger.getLogger( CuckooMappedRecord.class.getName() );
 
     private String recordName;
     private String recordShortDescription;
@@ -35,7 +34,7 @@ public class CuckooIndexedRecord extends ForwardingList implements IndexedRecord
     @SuppressWarnings( "unchecked" )
     public CuckooIndexedRecord( String recordName )
     {
-        LOG.trace( "CuckooMappedRecord.CuckooMappedRecord()" );
+        LOG.entering( "CuckooMappedRecord", "CuckooMappedRecord()" );
         this.recordName = recordName;
     }
 
@@ -61,7 +60,7 @@ public class CuckooIndexedRecord extends ForwardingList implements IndexedRecord
 
     public CuckooIndexedRecord clone() throws CloneNotSupportedException
     {
-        LOG.debug( "CuckooIndexedRecord.clone()" );
+        LOG.finer( "CuckooIndexedRecord.clone()" );
 
         CuckooIndexedRecord clone = ( CuckooIndexedRecord ) super.clone();
         clone.setRecordName( recordName );

@@ -18,30 +18,28 @@
  */
 package org.cuckoo.ra.cci;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.resource.ResourceException;
 import javax.resource.cci.IndexedRecord;
 import javax.resource.cci.MappedRecord;
 import javax.resource.cci.RecordFactory;
+import java.util.logging.Logger;
 
 public class CuckooRecordFactory implements RecordFactory
 {
-    private static final Logger LOG = LoggerFactory.getLogger( CuckooRecordFactory.class );
+    private static final Logger LOG = Logger.getLogger( CuckooRecordFactory.class.getName() );
 
     public CuckooRecordFactory()
     {
-        LOG.trace( "CuckooRecordFactory.CuckooRecordFactory()" );
+        LOG.entering( "CuckooRecordFactory", "CuckooRecordFactory()" );
     }
 
-    public MappedRecord createMappedRecord(String recordName) throws ResourceException
+    public MappedRecord createMappedRecord( String recordName ) throws ResourceException
     {
-        return new CuckooMappedRecord(recordName);
+        return new CuckooMappedRecord( recordName );
     }
 
-    public IndexedRecord createIndexedRecord(String recordName) throws ResourceException
+    public IndexedRecord createIndexedRecord( String recordName ) throws ResourceException
     {
-        return new CuckooIndexedRecord(recordName);
+        return new CuckooIndexedRecord( recordName );
     }
 }

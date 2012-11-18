@@ -30,18 +30,18 @@ import com.sap.conn.jco.JCoStructure;
 import org.cuckoo.ra.cci.ApplicationProperties;
 import org.cuckoo.ra.cci.CuckooMappedRecord;
 import org.cuckoo.ra.common.CuckooConnectionMetaData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.resource.ResourceException;
 import javax.resource.cci.MappedRecord;
 import javax.resource.cci.Record;
 import javax.resource.spi.LocalTransactionException;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class JCoAdapter
 {
-    private static final Logger LOG = LoggerFactory.getLogger( JCoAdapter.class );
+    private static final Logger LOG = Logger.getLogger( JCoAdapter.class.getName() );
 
     private static final String OUTPUT_RECORD_NAME = "EXPORT";
 
@@ -65,7 +65,7 @@ public class JCoAdapter
 
     public JCoAdapter( String destinationName, ApplicationProperties applicationProperties ) throws ResourceException
     {
-        LOG.trace( "JCoAdapter.JCoAdapter( " + destinationName + " )" );
+        LOG.entering( "JCoAdapter", "JCoAdapter( " + destinationName + " )" );
 
         if ( applicationProperties == null )
         {
@@ -96,7 +96,7 @@ public class JCoAdapter
 
     private JCoDestination getDestination( String destinationName ) throws ResourceException
     {
-        LOG.trace( "JCoAdapter.getDestination( " + destinationName + " )" );
+        LOG.entering( "JCoAdapter", "getDestination( " + destinationName + " )" );
         try
         {
             return JCoDestinationManager.getDestination( destinationName );
@@ -109,12 +109,12 @@ public class JCoAdapter
 
     public void disconnect() throws ResourceException
     {
-        LOG.trace( "JCoAdapter.disconnect()" );
+        LOG.entering( "JCoAdapter", "disconnect()" );
 
         // TODO: do we need this?
         if ( JCoContext.isStateful( destination ) )
         {
-            LOG.warn( "JCo destination is still stateful. Ending stateful destination now..." );
+            LOG.warning( "JCo destination is still stateful. Ending stateful destination now..." );
             try
             {
                 JCoContext.end( destination );
@@ -132,18 +132,18 @@ public class JCoAdapter
 
         try
         {
-            LOG.trace( "Getting JCo repository for destination: " + destination );
+            LOG.finest( "Getting JCo repository for destination: " + destination );
             final JCoFunction function = destination.getRepository().getFunction( functionName );
 
             final JCoParameterList importTableList = function.getTableParameterList();
             final JCoParameterList importList = function.getImportParameterList();
             mapper.populateImportRecord( importList, importTableList, ( MappedRecord ) inputRecord );
 
-            LOG.trace( "function before execute: " + function );
+            LOG.finest( "function before execute: " + function );
 
             function.execute( destination );
 
-            LOG.trace( "function after execute: " + function );
+            LOG.finest( "function after execute: " + function );
 
             mapper.checkForAbapExceptions( function );
             final CuckooMappedRecord outputRecord = new CuckooMappedRecord( OUTPUT_RECORD_NAME );
@@ -160,7 +160,7 @@ public class JCoAdapter
 
     public CuckooConnectionMetaData createConnectionMetaData() throws ResourceException
     {
-        LOG.trace( "JCoAdapter.createConnectionMetaData()" );
+        LOG.entering( "JCoAdapter", "createConnectionMetaData()" );
 
         try
         {
@@ -230,14 +230,14 @@ public class JCoAdapter
 
     public void startTransaction()
     {
-        LOG.debug( "Starting stateful SAP session for destination " + destination.getDestinationName() );
+        LOG.finer( "Starting stateful SAP session for destination " + destination.getDestinationName() );
 
         JCoContext.begin( destination );
     }
 
     public void commitTransaction() throws LocalTransactionException
     {
-        LOG.debug( "Committing transaction in SAP on destination " + destination.getDestinationName() );
+        LOG.finer( "Committing transaction in SAP on destination " + destination.getDestinationName() );
         try
         {
             JCoFunction commitFunction = destination.getRepository().getFunction( "BAPI_TRANSACTION_COMMIT" );
@@ -271,7 +271,7 @@ public class JCoAdapter
 
     public void rollbackTransaction() throws LocalTransactionException
     {
-        LOG.debug( "Rolling back transaction in SAP on destination " + destination.getDestinationName() );
+        LOG.finer( "Rolling back transaction in SAP on destination " + destination.getDestinationName() );
         try
         {
             JCoFunction rollbackFunction = destination.getRepository().getFunction( "BAPI_TRANSACTION_ROLLBACK" );

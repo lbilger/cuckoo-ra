@@ -20,8 +20,6 @@ package org.cuckoo.ra.cci;
 
 import org.cuckoo.ra.common.CuckooConnectionMetaData;
 import org.cuckoo.ra.spi.CuckooManagedConnection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.resource.NotSupportedException;
 import javax.resource.ResourceException;
@@ -31,11 +29,12 @@ import javax.resource.cci.LocalTransaction;
 import javax.resource.cci.MappedRecord;
 import javax.resource.cci.Record;
 import javax.resource.cci.ResultSetInfo;
+import java.util.logging.Logger;
 
 
 public class CuckooConnection implements Connection
 {
-    private static final Logger LOG = LoggerFactory.getLogger( CuckooConnection.class );
+    private static final Logger LOG = Logger.getLogger( CuckooConnection.class.getName() );
 
     private CuckooManagedConnection managedConnection;
 
@@ -45,7 +44,7 @@ public class CuckooConnection implements Connection
 
     public CuckooConnection( CuckooManagedConnection managedConnection )
     {
-        LOG.trace( "CuckooConnection.CuckooConnection()" );
+        LOG.entering( "CuckooConnection", "CuckooConnection()" );
         this.managedConnection = managedConnection;
     }
 
@@ -56,7 +55,7 @@ public class CuckooConnection implements Connection
      */
     public void close() throws ResourceException
     {
-        LOG.trace( "CuckooConnection.close()" );
+        LOG.entering( "CuckooConnection", "close()" );
 
         if ( closed )
         {
@@ -75,7 +74,7 @@ public class CuckooConnection implements Connection
      */
     public Interaction createInteraction() throws ResourceException
     {
-        LOG.trace( "CuckooConnection.createInteraction()" );
+        LOG.entering( "CuckooConnection", "createInteraction()" );
         checkIfValid();
         return new CuckooInteraction( this );
     }
@@ -91,7 +90,7 @@ public class CuckooConnection implements Connection
      */
     public LocalTransaction getLocalTransaction() throws ResourceException
     {
-        LOG.trace( "CuckooConnection.getLocalTransaction()" );
+        LOG.entering( "CuckooConnection", "getLocalTransaction()" );
         checkIfValid();
         return new CuckooCciLocalTransaction( managedConnection, this );
     }
@@ -104,7 +103,7 @@ public class CuckooConnection implements Connection
      */
     public CuckooConnectionMetaData getMetaData() throws ResourceException
     {
-        LOG.trace( "CuckooConnection.getMetaData()" );
+        LOG.entering( "CuckooConnection", "getMetaData()" );
         checkIfValid();
         return managedConnection.getMetaData();
     }
@@ -120,14 +119,14 @@ public class CuckooConnection implements Connection
      */
     public ResultSetInfo getResultSetInfo() throws ResourceException
     {
-        LOG.trace( "CuckooConnection.getResultSetInfo()" );
+        LOG.entering( "CuckooConnection", "getResultSetInfo()" );
         throw new NotSupportedException( "ResultSetInfo not supported" );
     }
 
 
     public void associateManagedConnection( CuckooManagedConnection managedConnection ) throws ResourceException
     {
-        LOG.trace( "CuckooConnection.associateManagedConnection()" );
+        LOG.entering( "CuckooConnection", "associateManagedConnection()" );
 
         this.managedConnection.disassociateConnection( this );
         this.managedConnection = managedConnection;
@@ -135,7 +134,7 @@ public class CuckooConnection implements Connection
 
     public void invalidate()
     {
-        LOG.trace( "CuckooConnection.invalidate()" );
+        LOG.entering( "CuckooConnection", "invalidate()" );
 
         invalidated = true;
     }
@@ -150,7 +149,7 @@ public class CuckooConnection implements Connection
 
     MappedRecord executeFunction( String functionName, Record input ) throws ResourceException
     {
-        LOG.trace( "CuckooConnection.executeFunction()" );
+        LOG.entering( "CuckooConnection", "executeFunction()" );
 
         checkIfValid();
         return managedConnection.executeFunction( functionName, input );

@@ -19,14 +19,13 @@
 package org.cuckoo.ra.cci;
 
 import org.cuckoo.ra.util.RaXmlReader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.resource.cci.ResourceAdapterMetaData;
+import java.util.logging.Logger;
 
 public class CuckooRaMetaData implements ResourceAdapterMetaData
 {
-    private static final Logger LOG = LoggerFactory.getLogger( CuckooRaMetaData.class );
+    private static final Logger LOG = Logger.getLogger( CuckooRaMetaData.class.getName() );
 
     private static final String RA_XML_FILE = "/META-INF/ra.xml";
 
@@ -38,7 +37,7 @@ public class CuckooRaMetaData implements ResourceAdapterMetaData
 
     public CuckooRaMetaData()
     {
-        LOG.trace( "CuckooRaMetaData()" );
+        LOG.entering( "CuckooRaMetaData", "CuckooRaMetaData()" );
 
         RaXmlReader xmlReader = new RaXmlReader( RA_XML_FILE );
         adapterVersion = xmlReader.getResourceAdapterVersion();

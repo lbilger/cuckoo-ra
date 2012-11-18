@@ -22,8 +22,6 @@ import com.sap.conn.jco.ext.Environment;
 import org.cuckoo.ra.cci.CuckooRaMetaData;
 import org.cuckoo.ra.cci.CuckooRecordFactory;
 import org.cuckoo.ra.jco.CuckooDestinationDataProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.resource.NotSupportedException;
 import javax.resource.ResourceException;
@@ -34,11 +32,12 @@ import javax.resource.spi.ResourceAdapterInternalException;
 import javax.resource.spi.endpoint.MessageEndpointFactory;
 import javax.transaction.xa.XAResource;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 
 public final class CuckooResourceAdapter implements ResourceAdapter
 {
-    private static final Logger LOG = LoggerFactory.getLogger( CuckooResourceAdapter.class );
+    private static final Logger LOG = Logger.getLogger( CuckooResourceAdapter.class.getName() );
 
     private final CuckooDestinationDataProvider destinationDataProvider;
     private final CuckooRaMetaData resourceAdapterMetaData;
@@ -46,7 +45,7 @@ public final class CuckooResourceAdapter implements ResourceAdapter
 
     public CuckooResourceAdapter()
     {
-        LOG.trace( "CuckooResourceAdapter.CuckooResourceAdapter()" );
+        LOG.entering( "CuckooResourceAdapter", "CuckooResourceAdapter()" );
         resourceAdapterMetaData = new CuckooRaMetaData();
         destinationDataProvider = new CuckooDestinationDataProvider();
         recordFactory = new CuckooRecordFactory();
@@ -62,7 +61,7 @@ public final class CuckooResourceAdapter implements ResourceAdapter
     public void endpointActivation( MessageEndpointFactory endpointFactory,
                                     ActivationSpec spec ) throws ResourceException
     {
-        LOG.trace( "CuckooResourceAdapter.endpointActivation(MessageEndpointFactory, ActivationSpec)" );
+        LOG.entering( "CuckooResourceAdapter", "endpointActivation(MessageEndpointFactory, ActivationSpec)" );
         throw new NotSupportedException( "Inbound calls are not yet implemented" );
     }
 
@@ -75,7 +74,7 @@ public final class CuckooResourceAdapter implements ResourceAdapter
     public void endpointDeactivation( MessageEndpointFactory endpointFactory,
                                       ActivationSpec spec )
     {
-        LOG.trace( "CuckooResourceAdapter.endpointDeactivation(MessageEndpointFactory, ActivationSpec)" );
+        LOG.entering( "CuckooResourceAdapter", "endpointDeactivation(MessageEndpointFactory, ActivationSpec)" );
     }
 
     /**
@@ -90,7 +89,7 @@ public final class CuckooResourceAdapter implements ResourceAdapter
     {
         LOG.info( "Starting " + resourceAdapterMetaData.getAdapterName() + " Version " +
                 resourceAdapterMetaData.getAdapterVersion() );
-        LOG.debug( "java.library.path=" + System.getProperty( "java.library.path" ) );
+        LOG.finer( "java.library.path=" + System.getProperty( "java.library.path" ) );
         Environment.registerDestinationDataProvider( destinationDataProvider );
     }
 
@@ -117,7 +116,7 @@ public final class CuckooResourceAdapter implements ResourceAdapter
     public XAResource[] getXAResources( ActivationSpec[] specs )
             throws ResourceException
     {
-        LOG.trace( "CuckooResourceAdapter.getXAResources(ActivationSpec[])" );
+        LOG.entering( "CuckooResourceAdapter", "getXAResources(ActivationSpec[])" );
         throw new NotSupportedException( "XA-Resources are not supported" );
     }
 
@@ -129,8 +128,8 @@ public final class CuckooResourceAdapter implements ResourceAdapter
         {
             // TODO when upgrading the ra to JCA 1.6, lifecycle methods should be used to remove a JCo destination
             // when a MCF config is undeployed. There is no way to get noticed about this before 1.6.
-            LOG.warn( "A JCo destination with destinationName '" + destinationName + "' was already registered. " +
-                    "This should only happen when redeploying the ManagedConnectionFactory configuration.");
+            LOG.warning( "A JCo destination with destinationName '" + destinationName + "' was already registered. " +
+                    "This should only happen when redeploying the ManagedConnectionFactory configuration." );
             destinationDataProvider.removeDestination( destinationName );
         }
 
@@ -139,14 +138,14 @@ public final class CuckooResourceAdapter implements ResourceAdapter
 
     public CuckooRaMetaData getResourceAdapterMetaData()
     {
-        LOG.trace( "CuckooResourceAdapter.getResourceAdapterMetaData()" );
+        LOG.entering( "CuckooResourceAdapter", "getResourceAdapterMetaData()" );
 
         return resourceAdapterMetaData;
     }
 
     public CuckooRecordFactory getRecordFactory()
     {
-        LOG.trace( "CuckooResourceAdapter.getRecordFactory()" );
+        LOG.entering( "CuckooResourceAdapter", "getRecordFactory()" );
 
         return recordFactory;
     }

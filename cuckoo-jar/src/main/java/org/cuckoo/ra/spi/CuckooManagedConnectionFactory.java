@@ -23,8 +23,6 @@ import org.cuckoo.ra.cci.ApplicationPropertiesImpl;
 import org.cuckoo.ra.cci.CuckooConnectionFactory;
 import org.cuckoo.ra.cci.CuckooConnectionFactoryImpl;
 import org.cuckoo.ra.jco.JCoDestinationUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.resource.NotSupportedException;
 import javax.resource.ResourceException;
@@ -41,15 +39,16 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolder
         implements ManagedConnectionFactory, ResourceAdapterAssociation
 {
-    private static final Logger LOG = LoggerFactory.getLogger( CuckooManagedConnectionFactory.class );
+    private static final Logger LOG = Logger.getLogger( CuckooManagedConnectionFactory.class.getName() );
 
     private CuckooResourceAdapter resourceAdapter;
 
-    private PrintWriter logwriter;
+    private PrintWriter logWriter;
 
     private boolean initialized = false;
 
@@ -58,13 +57,13 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
     private UUID createId()
     {
         final UUID uuid = UUID.randomUUID();
-        LOG.trace( "CuckooManagedConnectionFactory.createId(), ID=" + uuid );
+        LOG.finest( "CuckooManagedConnectionFactory.createId(), ID=" + uuid );
         return uuid;
     }
 
     public CuckooManagedConnectionFactory()
     {
-        LOG.trace( toString() );
+        LOG.finest( toString() );
     }
 
     /**
@@ -77,7 +76,7 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
     public CuckooConnectionFactory createConnectionFactory( ConnectionManager connectionManager )
             throws ResourceException
     {
-        LOG.trace( "CuckooManagedConnectionFactory.createConnectionFactory(ConnectionManager)" );
+        LOG.entering( "CuckooManagedConnectionFactory", "createConnectionFactory(ConnectionManager)" );
 
         if ( !initialized )
         {
@@ -109,7 +108,7 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
      */
     public CuckooConnectionFactory createConnectionFactory() throws ResourceException
     {
-        LOG.trace( "CuckooManagedConnectionFactory.createConnectionFactory()" );
+        LOG.entering( "CuckooManagedConnectionFactory", "createConnectionFactory()" );
 
         return createConnectionFactory( new CuckooConnectionManager() );
     }
@@ -126,9 +125,8 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
                                                       ConnectionRequestInfo connectionRequestInfo )
             throws ResourceException
     {
-        LOG.trace(
-                "CuckooManagedConnectionFactory.createManagedConnection(Subject, ConnectionRequestInfo)" );
-        LOG.trace( "Parameters passed by container: subject=" + subject + ", connectionRequestInfo=" +
+        LOG.entering( "CuckooManagedConnectionFactory", "createManagedConnection(Subject, ConnectionRequestInfo)" );
+        LOG.finest( "Parameters passed by container: subject=" + subject + ", connectionRequestInfo=" +
                 connectionRequestInfo );
 
         assertInitialized();
@@ -137,26 +135,26 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
 
         if ( subject != null )
         {
-            LOG.debug( "Container managed sign-on. Subject: " + subject );
+            LOG.finer( "Container managed sign-on. Subject: " + subject );
 
             final Set<PasswordCredential> passwordCredentials = getPasswordCredentials( subject );
 
             if ( passwordCredentials != null && !passwordCredentials.isEmpty() )
             {
-                LOG.debug( "Password based sign-on based on PasswordCredentials, size=" + passwordCredentials.size() );
+                LOG.finer( "Password based sign-on based on PasswordCredentials, size=" + passwordCredentials.size() );
 
                 for ( final PasswordCredential pc : passwordCredentials )
                 {
-                    LOG.trace( "ManagedConnectionFactory of PC=" + pc.getManagedConnectionFactory() );
-                    LOG.trace( "ManagedConnectionFactory of ME=" + this );
-                    LOG.trace( "same()=" + ( this == pc.getManagedConnectionFactory() ) );
-                    LOG.trace( "equals()=" + this.equals( pc.getManagedConnectionFactory() ) );
+                    LOG.finest( "ManagedConnectionFactory of PC=" + pc.getManagedConnectionFactory() );
+                    LOG.finest( "ManagedConnectionFactory of ME=" + this );
+                    LOG.finest( "same()=" + ( this == pc.getManagedConnectionFactory() ) );
+                    LOG.finest( "equals()=" + this.equals( pc.getManagedConnectionFactory() ) );
 
                     if ( this.equals( pc.getManagedConnectionFactory() ) )
                     {
                         if ( applicationProperties != null )
                         {
-                            LOG.debug(
+                            LOG.finer(
                                     "Overwriting application defined configuration with user/password from Credentials" );
                             applicationProperties.setUser( pc.getUserName() );
                             applicationProperties.setPassword( String.valueOf( pc.getPassword() ) );
@@ -165,8 +163,9 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
                         }
                         else
                         {
-                            LOG.debug(
+                            LOG.finer(
                                     "No application-defined configuration info, using configured properties and user/password from Credentials" );
+
                             applicationProperties = new ApplicationPropertiesImpl( pc.getUserName(),
                                     String.valueOf( pc.getPassword() ) );
                             return new CuckooManagedConnectionImpl( getConfigurationProperties(),
@@ -183,12 +182,12 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
         }
         else if ( applicationProperties == null )
         {
-            LOG.debug(
+            LOG.finer(
                     "No configuration provided by application, use configured properties" );
         }
         else
         {
-            LOG.debug( "Application managed sign-on. Using configuration provided by application" );
+            LOG.finer( "Application managed sign-on. Using configuration provided by application" );
         }
         return new CuckooManagedConnectionImpl( getConfigurationProperties(), applicationProperties );
     }
@@ -207,41 +206,43 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
                                                       ConnectionRequestInfo cxRequestInfo )
             throws ResourceException
     {
-        LOG.trace(
-                "CuckooManagedConnectionFactory.matchManagedConnections(Set, Subject, ConnectionRequestInfo)" );
+        LOG.entering(
+                "CuckooManagedConnectionFactory", "matchManagedConnections(Set, Subject, ConnectionRequestInfo)" );
 
         assertInitialized();
 
         if ( cxRequestInfo != null && !( cxRequestInfo instanceof ApplicationPropertiesImpl ) )
         {
-            LOG.warn( "ConnectionRequestInfo is not an instance of ApplicationProperties, but of " +
+            LOG.warning( "ConnectionRequestInfo is not an instance of ApplicationProperties, but of " +
                     cxRequestInfo.getClass() );
             return null;
         }
 
         ApplicationProperties applicationProperties = ( ApplicationProperties ) cxRequestInfo;
 
-        LOG.debug( "ConnectionRequestInfo=" + applicationProperties );
+        LOG.finer( "ConnectionRequestInfo=" + applicationProperties );
 
         for ( final Object object : connectionSet )
         {
             final CuckooManagedConnectionImpl candidateConnection = ( CuckooManagedConnectionImpl ) object;
             ApplicationProperties candidateConnectionProperties = candidateConnection.getApplicationProperties();
 
-            LOG.debug( "Candidate Connection=" + candidateConnectionProperties );
+            LOG.finer( "Candidate Connection=" + candidateConnectionProperties );
 
             //noinspection ConstantConditions
             if ( applicationProperties == null )
             {
                 if ( candidateConnectionProperties == null )
                 {
-                    LOG.debug( "Found matching connection (no application properties): " + candidateConnection );
+                    LOG.finer( "Found matching connection (no application properties): " + candidateConnection );
                     return candidateConnection;
                 }
                 else
                 {
                     if ( hasUsernameAndPasswordAsConfigured( candidateConnectionProperties ) )
-                    LOG.debug( "Found matching connection (equal user and password): " + candidateConnection );
+                    {
+                        LOG.finer( "Found matching connection (equal user and password): " + candidateConnection );
+                    }
                     return candidateConnection;
                 }
             }
@@ -249,12 +250,12 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
             {
                 if ( applicationProperties.equals( candidateConnectionProperties ) )
                 {
-                    LOG.debug( "Found matching connection (equal application properties): " + candidateConnection );
+                    LOG.finer( "Found matching connection (equal application properties): " + candidateConnection );
                     return candidateConnection;
                 }
             }
         }
-        LOG.debug( "No matching connection found, returning null" );
+        LOG.finer( "No matching connection found, returning null" );
         return null;
     }
 
@@ -273,8 +274,8 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
      */
     public PrintWriter getLogWriter() throws ResourceException
     {
-        LOG.trace( "CuckooManagedConnectionFactory.getLogWriter()" );
-        return logwriter;
+        LOG.entering( "CuckooManagedConnectionFactory", "getLogWriter()" );
+        return logWriter;
     }
 
     /**
@@ -285,9 +286,10 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
      */
     public void setLogWriter( PrintWriter out ) throws ResourceException
     {
-        LOG.trace( "CuckooManagedConnectionFactory.setLogWriter(PrintWriter)" );
-        logwriter = out;
-        logwriter.println( "     ########## LogWriter ###############" );
+        LOG.entering( "CuckooManagedConnectionFactory", "setLogWriter(PrintWriter)" );
+
+        logWriter = out;
+//        logWriter.println( "     ########## LogWriter ###############" );
     }
 
     /**
@@ -297,7 +299,7 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
      */
     public CuckooResourceAdapter getResourceAdapter()
     {
-        LOG.trace( "CuckooManagedConnectionFactory.getResourceAdapter()" );
+        LOG.entering( "CuckooManagedConnectionFactory", "getResourceAdapter()" );
         return resourceAdapter;
     }
 
@@ -308,7 +310,7 @@ public class CuckooManagedConnectionFactory extends ConfigurationPropertiesHolde
      */
     public void setResourceAdapter( ResourceAdapter ra ) throws ResourceException
     {
-        LOG.trace( "CuckooManagedConnectionFactory.setResourceAdapter(ResourceAdapter)" );
+        LOG.entering( "CuckooManagedConnectionFactory", "setResourceAdapter(ResourceAdapter)" );
 
         if ( !( ra instanceof CuckooResourceAdapter ) )
         {

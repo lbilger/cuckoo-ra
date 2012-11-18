@@ -18,9 +18,6 @@
  */
 package org.cuckoo.ra.cci;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.resource.NotSupportedException;
 import javax.resource.ResourceException;
 import javax.resource.cci.Connection;
@@ -29,10 +26,11 @@ import javax.resource.cci.InteractionSpec;
 import javax.resource.cci.MappedRecord;
 import javax.resource.cci.Record;
 import javax.resource.cci.ResourceWarning;
+import java.util.logging.Logger;
 
 public class CuckooInteraction implements Interaction
 {
-    private static final Logger LOG = LoggerFactory.getLogger( CuckooInteraction.class );
+    private static final Logger LOG = Logger.getLogger( CuckooInteraction.class.getName() );
 
     private CuckooConnection connection;
 
@@ -40,33 +38,33 @@ public class CuckooInteraction implements Interaction
 
     CuckooInteraction( CuckooConnection cuckooCciConnection )
     {
-        LOG.trace( "CuckooInteraction.CuckooInteraction(CuckooConnection)" );
+        LOG.entering( "CuckooInteraction", "CuckooInteraction(CuckooConnection)" );
         connection = cuckooCciConnection;
     }
 
     public void close() throws ResourceException
     {
-        LOG.trace( "CuckooInteraction.close()" );
+        LOG.entering( "CuckooInteraction", "close()" );
         assertNotClosed();
         closed = true;
     }
 
     public Connection getConnection()
     {
-        LOG.trace( "CuckooInteraction.getConnection()" );
+        LOG.entering( "CuckooInteraction", "getConnection()" );
         return connection;
     }
 
     public boolean execute( final InteractionSpec ispec, final Record input, final Record output )
             throws ResourceException
     {
-        LOG.trace( "CuckooInteraction.execute(InteractionSpec, Record, Record)" );
+        LOG.entering( "CuckooInteraction", "execute(InteractionSpec, Record, Record)" );
         throw new NotSupportedException( "This method is not supported. Please use execute(InteractionSpec, Record)" );
     }
 
     public Record execute( final InteractionSpec interactionSpec, final Record inputRecord ) throws ResourceException
     {
-        LOG.trace( "CuckooInteraction.execute(InteractionSpec, Record)" );
+        LOG.entering( "CuckooInteraction", "execute(InteractionSpec, Record)" );
 
         assertNotClosed();
         assertCorrectType( interactionSpec );
@@ -95,13 +93,13 @@ public class CuckooInteraction implements Interaction
 
     public ResourceWarning getWarnings() throws ResourceException
     {
-        LOG.trace( "CuckooInteraction.getWarnings()" );
+        LOG.entering( "CuckooInteraction", "getWarnings()" );
         return null;
     }
 
     public void clearWarnings() throws ResourceException
     {
-        LOG.trace( "CuckooInteraction.clearWarnings()" );
+        LOG.entering( "CuckooInteraction", "clearWarnings()" );
         // nothing to do
     }
 

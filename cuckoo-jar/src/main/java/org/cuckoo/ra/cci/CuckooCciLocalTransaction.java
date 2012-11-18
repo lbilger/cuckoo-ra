@@ -19,15 +19,14 @@
 package org.cuckoo.ra.cci;
 
 import org.cuckoo.ra.spi.CuckooManagedConnection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.resource.ResourceException;
 import javax.resource.cci.Connection;
+import java.util.logging.Logger;
 
 public class CuckooCciLocalTransaction implements javax.resource.cci.LocalTransaction
 {
-    private static final Logger LOG = LoggerFactory.getLogger( CuckooCciLocalTransaction.class );
+    private static final Logger LOG = Logger.getLogger( CuckooCciLocalTransaction.class.getName() );
 
     private final Connection connectionHandle;
 
@@ -42,19 +41,19 @@ public class CuckooCciLocalTransaction implements javax.resource.cci.LocalTransa
 
     public void begin() throws ResourceException
     {
-        LOG.trace( "CuckooCciLocalTransaction.begin()" );
+        LOG.entering( "CuckooCciLocalTransaction", "begin()" );
         managedConnection.beginLocalTransaction( connectionHandle );
     }
 
     public void commit() throws ResourceException
     {
-        LOG.trace( "CuckooCciLocalTransaction.commit()" );
+        LOG.entering( "CuckooCciLocalTransaction", "commit()" );
         managedConnection.commitLocalTransaction( connectionHandle );
     }
 
     public void rollback() throws ResourceException
     {
-        LOG.trace( "CuckooCciLocalTransaction.rollback()" );
+        LOG.entering( "CuckooCciLocalTransaction", "rollback()" );
         managedConnection.rollbackLocalTransaction( connectionHandle );
     }
 }

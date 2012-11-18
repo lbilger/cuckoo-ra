@@ -22,8 +22,6 @@ package org.cuckoo.ra.it.transaction;
 import com.sap.conn.jco.JCoDestinationManager;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.monitor.JCoDestinationMonitor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
@@ -35,12 +33,13 @@ import javax.resource.cci.ConnectionFactory;
 import javax.resource.cci.Interaction;
 import javax.resource.cci.LocalTransaction;
 import javax.resource.cci.MappedRecord;
+import java.util.logging.Logger;
 
 @Stateless
-public class TransactionTestEjbBean implements TransactionTestEjb, TransactionTestEjbRemote
+public class TransactionTestEjbBean implements TransactionTestEjb//, TransactionTestEjbRemote
 {
-    private static final String RA_JNDI_NAME = "java:jboss/eis/sap/NSP";
-    private static final Logger LOG = LoggerFactory.getLogger( TransactionTestEjbBean.class );
+    private static final String RA_JNDI_NAME = "java:/eis/sap/NSP";
+    private static final Logger LOG = Logger.getLogger( TransactionTestEjbBean.class.getName() );
 
     @Resource( mappedName = RA_JNDI_NAME )
     private ConnectionFactory cf;

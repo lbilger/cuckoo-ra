@@ -19,27 +19,27 @@
 package org.cuckoo.ra.cci;
 
 import org.cuckoo.ra.spi.CuckooManagedConnectionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.resource.ResourceException;
 import javax.resource.cci.ConnectionSpec;
 import javax.resource.spi.ConnectionManager;
+import java.util.logging.Logger;
 
 
 public class CuckooConnectionFactoryImpl implements CuckooConnectionFactory
 {
-    private static final Logger LOG = LoggerFactory.getLogger( CuckooConnectionFactoryImpl.class );
+    private static final Logger LOG = Logger.getLogger( CuckooConnectionFactoryImpl.class.getName() );
 
     private Reference reference;
     private ConnectionManager connectionManager;
     private CuckooManagedConnectionFactory managedConnectionFactory;
 
+    // JCA 1.5 Spec, Section: 17.5.1.1: A ConnectionFactory must have a default constructor
+    @SuppressWarnings( {"UnusedDeclaration"} )
     public CuckooConnectionFactoryImpl()
     {
-        // JCA 1.5 Spec, Section: 17.5.1.1: A ConnectionFactory must have a default constructor
     }
 
     /**
@@ -49,7 +49,7 @@ public class CuckooConnectionFactoryImpl implements CuckooConnectionFactory
     public CuckooConnectionFactoryImpl( ConnectionManager connectionManager,
                                         CuckooManagedConnectionFactory managedConnectionFactory )
     {
-        LOG.trace( "CuckooConnectionFactoryImpl.CuckooConnectionFactoryImpl( ConnectionManager )" );
+        LOG.entering( "CuckooConnectionFactoryImpl", "CuckooConnectionFactoryImpl( ConnectionManager )" );
         this.connectionManager = connectionManager;
         this.managedConnectionFactory = managedConnectionFactory;
     }
@@ -62,7 +62,7 @@ public class CuckooConnectionFactoryImpl implements CuckooConnectionFactory
      */
     public CuckooConnection getConnection() throws ResourceException
     {
-        LOG.trace( "CuckooConnectionFactoryImpl.getConnection()" );
+        LOG.entering( "CuckooConnectionFactoryImpl", "getConnection()" );
         return ( CuckooConnection ) connectionManager.allocateConnection( managedConnectionFactory, null );
     }
 
@@ -75,7 +75,7 @@ public class CuckooConnectionFactoryImpl implements CuckooConnectionFactory
      */
     public CuckooConnection getConnection( ConnectionSpec connSpec ) throws ResourceException
     {
-        LOG.trace( "CuckooConnectionFactoryImpl.getConnection( ConnectionSpec )" );
+        LOG.entering( "CuckooConnectionFactoryImpl", "getConnection( ConnectionSpec )" );
         if ( connSpec == null )
         {
             throw new IllegalArgumentException( "The ConnectionSpec passed as an argument must not be null" );
@@ -99,7 +99,7 @@ public class CuckooConnectionFactoryImpl implements CuckooConnectionFactory
      */
     public CuckooRaMetaData getMetaData() throws ResourceException
     {
-        LOG.trace( "CuckooConnectionFactoryImpl.getMetaData()" );
+        LOG.entering( "CuckooConnectionFactoryImpl", "getMetaData()" );
         return managedConnectionFactory.getResourceAdapter().getResourceAdapterMetaData();
     }
 
@@ -113,7 +113,7 @@ public class CuckooConnectionFactoryImpl implements CuckooConnectionFactory
      */
     public CuckooRecordFactory getRecordFactory() throws ResourceException
     {
-        LOG.trace( "CuckooConnectionFactoryImpl.getRecordFactory()" );
+        LOG.entering( "CuckooConnectionFactoryImpl", "getRecordFactory()" );
         return managedConnectionFactory.getResourceAdapter().getRecordFactory();
     }
 
@@ -124,7 +124,7 @@ public class CuckooConnectionFactoryImpl implements CuckooConnectionFactory
      */
     public Reference getReference() throws NamingException
     {
-        LOG.trace( "CuckooConnectionFactoryImpl.getReference()" );
+        LOG.entering( "CuckooConnectionFactoryImpl", "getReference()" );
         return reference;
     }
 
@@ -135,7 +135,7 @@ public class CuckooConnectionFactoryImpl implements CuckooConnectionFactory
      */
     public void setReference( Reference reference )
     {
-        LOG.trace( "CuckooConnectionFactoryImpl.setReference( Reference )" );
+        LOG.entering( "CuckooConnectionFactoryImpl", "setReference( Reference )" );
 
         this.reference = reference;
     }
