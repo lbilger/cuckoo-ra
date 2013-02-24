@@ -1,1 +1,1 @@
-Dependencies: com.sap.sap-jco, org.slf4j, org.slf4j.impl
+Dependencies: com.sap.sap-jco
