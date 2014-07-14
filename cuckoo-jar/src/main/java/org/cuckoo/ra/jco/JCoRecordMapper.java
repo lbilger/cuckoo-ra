@@ -60,8 +60,22 @@ public class JCoRecordMapper
                 }
                 else if ( value instanceof IndexedRecord )
                 {
-                    // Table parameters
-                    populateTable( tableList.getTable( fieldName ), ( IndexedRecord ) value );
+                    // Might be a table parameter or an input parameter with a table type.
+                    JCoTable table = null;
+                    // First check if a table parameter of this name exists
+                    if (tableList != null) {
+                        table = tableList.getTable(fieldName);
+                    }
+                    // No table parameter, look for an import parameter
+                    if (table == null) {
+                        table = importList.getTable(fieldName);
+                    }
+                    // No parameter of this name found at all
+                    if (table == null) {
+                        throw new IllegalArgumentException("No table or input parameter found for field name " + fieldName);
+                    }
+                    // Now populate the found table
+                    populateTable(table, (IndexedRecord) value);
                 }
                 else
                 {
@@ -96,10 +110,9 @@ public class JCoRecordMapper
             final MappedRecord mappedRecord = new CuckooMappedRecord( indexedRecord.getRecordName()
                     + ":row:" + i );
 
-            for ( int j = 0; j < table.getNumColumns(); j++ )
-            {
-                mappedRecord.put( table.getMetaData().getName( j ), table.getValue( j ) );
-            }
+            // Each component of the table might itself be a table, structure or simple value.
+            // Luckily, we can reuse populateMappedRecord recursively - a table is also a record.
+            populateMappedRecord(mappedRecord, table);
 
             indexedRecord.add( mappedRecord );
             table.nextRow();
