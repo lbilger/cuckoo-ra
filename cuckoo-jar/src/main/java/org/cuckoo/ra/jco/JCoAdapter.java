@@ -145,7 +145,6 @@ public class JCoAdapter
 
             LOG.finest( "function after execute: " + function );
 
-            mapper.checkForAbapExceptions( function );
             final CuckooMappedRecord outputRecord = new CuckooMappedRecord( OUTPUT_RECORD_NAME );
             mapper.convertExportParameters( function, outputRecord );
             mapper.convertExportTable( function, outputRecord );
